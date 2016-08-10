@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">SmartShopper</string>
+    <string name="sdd_menu">New List</string>
+    <string name="edit_stores_menu">Edit Stores</string>
+    <string name="edit_items_menu">Edit Items</string>
+</resources>
