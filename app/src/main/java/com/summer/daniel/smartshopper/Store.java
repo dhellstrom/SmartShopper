@@ -15,10 +15,14 @@ public class Store {
     private String[] mCategories;
     private int mNumberOfCategories;
 
-    public Store(String name, LatLng location){
+    public Store(String name, LatLng location, String[] categories){
         mName = name;
         mLocation = location;
-        mCategories = new String[11];
+        mCategories = categories;
+    }
+
+    public Store(String name, LatLng location){
+        this(name, location, new String[11]);
     }
 
     public String getName(){

@@ -33,4 +33,15 @@ public class DbSchema {
             public static final String CATEGORY_NAME = "category name";
         }
     }
+
+    public static final class ListTable{
+        public static final String NAME = "lists";
+
+        public static final class Cols{
+            public static final String UUID = "uuid";
+            public static final String LIST_NAME = "list name";
+            public static final String ITEMS = "items";
+            public static final String PURCHASED = "purchased";
+        }
+    }
 }

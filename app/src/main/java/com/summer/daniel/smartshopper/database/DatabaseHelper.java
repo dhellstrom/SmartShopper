@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.summer.daniel.smartshopper.database.DbSchema.CategoryTable;
 import com.summer.daniel.smartshopper.database.DbSchema.ItemTable;
+import com.summer.daniel.smartshopper.database.DbSchema.ListTable;
 import com.summer.daniel.smartshopper.database.DbSchema.StoreTable;
 
 /**
@@ -37,6 +38,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE " + CategoryTable.NAME + "(" +
         "_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
         CategoryTable.Cols.CATEGORY_NAME +
+        ")");
+
+        db.execSQL("CREATE TABLE " + ListTable.NAME + "(" +
+        "_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+        ListTable.Cols.UUID + ", " +
+        ListTable.Cols.LIST_NAME + ", " +
+        ListTable.Cols.ITEMS + ", " +
+        ListTable.Cols.PURCHASED +
         ")");
     }
 
