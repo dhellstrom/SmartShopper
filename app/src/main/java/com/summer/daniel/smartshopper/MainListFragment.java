@@ -11,10 +11,10 @@ import android.view.ViewGroup;
 /**
  * Created by Daniel on 2016-08-10.
  */
-public class ListFragment extends Fragment{
+public class MainListFragment extends Fragment{
 
     public static Fragment newInstance(){
-        return new ListFragment();
+        return new MainListFragment();
     }
 
     @Override
@@ -27,7 +27,7 @@ public class ListFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
-        View v = inflater.inflate(R.layout.fragment_list, container, false);
+        View v = inflater.inflate(R.layout.fragment_main_list, container, false);
 
         return v;
     }
