@@ -2,6 +2,7 @@ package com.summer.daniel.smartshopper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 /**
@@ -43,15 +44,45 @@ public class ShoppingList {
         this(UUID.randomUUID(), "Shopping List", new ArrayList<ShopItem>(), new ArrayList<Boolean>());
     }
 
-    public void addItem(ShopItem item){
-        mItems.add(item);
-        mPurchased.add(false);
+    public boolean addItem(ShopItem item){
+        if(!mItems.contains(item)) {
+            mItems.add(item);
+            mPurchased.add(Boolean.valueOf(false));
+            return true;
+        }
+        return false;
     }
 
-    public void removeItem(ShopItem item){
+    public boolean removeItem(String itemName){
+        ShopItem item = new ShopItem(itemName, "");
         int index = mItems.indexOf(item);
-        mItems.remove(index);
-        mPurchased.remove(index);
+        if(index != -1) {
+            mItems.remove(index);
+            mPurchased.remove(index);
+            return true;
+        }
+        return false;
+    }
+
+    public void toggleItemPurchased(String itemName){
+        ShopItem item = new ShopItem(itemName, "");
+        int index = mItems.indexOf(item);
+        if(index != -1) {
+            boolean old = mPurchased.get(index).booleanValue();
+            mPurchased.set(index, Boolean.valueOf(!old));
+        }else{
+            throw new NoSuchElementException();
+        }
+    }
+
+    public boolean getItemPurchasedStatus(String itemName){
+        ShopItem item = new ShopItem(itemName, "");
+        int index = mItems.indexOf(item);
+        if(index != -1) {
+            return mPurchased.get(index).booleanValue();
+        }else{
+            throw new NoSuchElementException();
+        }
     }
 
     public UUID getId(){

@@ -2,14 +2,20 @@ package com.summer.daniel.smartshopper;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.summer.daniel.smartshopper.database.CategoryCursorWrapper;
 import com.summer.daniel.smartshopper.database.DatabaseHelper;
 import com.summer.daniel.smartshopper.database.DbSchema.CategoryTable;
 import com.summer.daniel.smartshopper.database.DbSchema.ItemTable;
 import com.summer.daniel.smartshopper.database.DbSchema.ListTable;
 import com.summer.daniel.smartshopper.database.DbSchema.StoreTable;
+import com.summer.daniel.smartshopper.database.ShopItemCursorWrapper;
+import com.summer.daniel.smartshopper.database.ShoppingListCursorWrapper;
+import com.summer.daniel.smartshopper.database.StoreCursorWrapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +44,41 @@ public class InformationStorage {
         mDatabase.insert(StoreTable.NAME, null, values);
     }
 
+    public List<Store> getStores(){
+        List<Store> stores = new ArrayList<>();
+
+        StoreCursorWrapper cursor = queryStores(null, null);
+
+        try{
+            cursor.moveToFirst();
+            while(!cursor.isAfterLast()){
+                stores.add(cursor.getStore());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+        return stores;
+    }
+
+    public Store getStore(String storeName){
+        StoreCursorWrapper cursor = queryStores(
+                StoreTable.Cols.STORE_NAME + " = ?",
+                new String[]{storeName}
+        );
+
+        try{
+            if(cursor.getCount() == 0){
+                return null;
+            }
+
+            cursor.moveToFirst();
+            return cursor.getStore();
+        }finally {
+            cursor.close();
+        }
+    }
+
     public void updateStore(Store store){
         String name = store.getName();
         ContentValues values = getContentValues(store);
@@ -52,14 +93,102 @@ public class InformationStorage {
         mDatabase.insert(ItemTable.NAME, null, values);
     }
 
+    public List<ShopItem> getShopItems(){
+        List<ShopItem> items = new ArrayList<>();
+
+        ShopItemCursorWrapper cursor = queryShopItems(null, null);
+
+        try{
+            cursor.moveToFirst();
+            while(!cursor.isAfterLast()){
+                items.add(cursor.getShopItem());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+        return items;
+    }
+
+    public ShopItem getShopItem(String itemName) {
+        ShopItemCursorWrapper cursor = queryShopItems(
+                ItemTable.Cols.ITEM_NAME + " = ?",
+                new String[]{itemName}
+        );
+
+        try {
+            if (cursor.getCount() == 0) {
+                return null;
+            }
+
+            cursor.moveToFirst();
+            return cursor.getShopItem();
+        } finally {
+            cursor.close();
+        }
+    }
+
     public void addCategory(String category){
         ContentValues values = getContentValues(category);
         mDatabase.insert(CategoryTable.NAME, null, values);
     }
 
+    public List<String> getCategories(){
+        List<String> categories = new ArrayList<>();
+
+        CategoryCursorWrapper cursor = queryCategories(null, null);
+
+        try{
+            cursor.moveToFirst();
+            while(!cursor.isAfterLast()){
+                categories.add(cursor.getCategory());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+        return categories;
+    }
+
+
     public void addShoppingList(ShoppingList list){
         ContentValues values = getContentValues(list);
         mDatabase.insert(ListTable.NAME, null, values);
+    }
+
+    public List<ShoppingList> getShoppingLists(){
+        List<ShoppingList> lists = new ArrayList<>();
+
+        ShoppingListCursorWrapper cursor = queryShoppingLists(null, null);
+
+        try{
+            cursor.moveToFirst();
+            while(!cursor.isAfterLast()){
+                lists.add(cursor.getShoppingList(getShopItems()));
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+        return lists;
+    }
+
+    public ShoppingList getShoppingList(String listName) {
+        ShoppingListCursorWrapper cursor = queryShoppingLists(
+                ItemTable.Cols.ITEM_NAME + " = ?",
+                new String[]{listName}
+        );
+
+        try {
+            if (cursor.getCount() == 0) {
+                return null;
+            }
+
+            cursor.moveToFirst();
+            return cursor.getShoppingList(getShopItems());
+        } finally {
+            cursor.close();
+        }
     }
 
     public void updateShoppingList(ShoppingList list){
@@ -69,6 +198,62 @@ public class InformationStorage {
         mDatabase.update(ListTable.NAME, values,
                 ListTable.Cols.UUID + " = ?",
                 new String[]{idString});
+    }
+
+    private StoreCursorWrapper queryStores(String whereClause, String[] whereArgs){
+        Cursor cursor = mDatabase.query(
+                StoreTable.NAME,
+                null, //selects all coumns
+                whereClause,
+                whereArgs,
+                null,
+                null,
+                null
+        );
+
+        return new StoreCursorWrapper(cursor);
+    }
+
+    private ShopItemCursorWrapper queryShopItems(String whereClause, String[] whereArgs){
+        Cursor cursor = mDatabase.query(
+                ItemTable.NAME,
+                null, //selects all coumns
+                whereClause,
+                whereArgs,
+                null,
+                null,
+                null
+        );
+
+        return new ShopItemCursorWrapper(cursor);
+    }
+
+    private CategoryCursorWrapper queryCategories(String whereClause, String[] whereArgs){
+        Cursor cursor = mDatabase.query(
+                CategoryTable.NAME,
+                null, //selects all coumns
+                whereClause,
+                whereArgs,
+                null,
+                null,
+                null
+        );
+
+        return new CategoryCursorWrapper(cursor);
+    }
+
+    private ShoppingListCursorWrapper queryShoppingLists(String whereClause, String[] whereArgs){
+        Cursor cursor = mDatabase.query(
+                ListTable.NAME,
+                null, //selects all coumns
+                whereClause,
+                whereArgs,
+                null,
+                null,
+                null
+        );
+
+        return new ShoppingListCursorWrapper(cursor);
     }
 
     private static ContentValues getContentValues(Store store){

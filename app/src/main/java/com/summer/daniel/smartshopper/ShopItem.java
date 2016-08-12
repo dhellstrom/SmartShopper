@@ -20,4 +20,12 @@ public class ShopItem {
     public String getCategory(){
         return mCategory;
     }
+
+    @Override
+    public boolean equals(Object o){
+        if(o instanceof ShopItem){
+            return ((ShopItem) o).getName().equals(mName);
+        }
+        return false;
+    }
 }
