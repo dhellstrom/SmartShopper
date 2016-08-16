@@ -17,6 +17,7 @@ import com.summer.daniel.smartshopper.database.StoreCursorWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Daniel on 2016-08-10.
@@ -28,7 +29,7 @@ public class InformationStorage {
     private SQLiteDatabase mDatabase;
 
     public static InformationStorage get(Context context){
-        if(sInformationStorage != null){
+        if(sInformationStorage == null){
             sInformationStorage = new InformationStorage(context);
         }
         return sInformationStorage;
@@ -158,13 +159,14 @@ public class InformationStorage {
 
     public List<ShoppingList> getShoppingLists(){
         List<ShoppingList> lists = new ArrayList<>();
+        List<ShopItem> items = getShopItems();
 
         ShoppingListCursorWrapper cursor = queryShoppingLists(null, null);
 
         try{
             cursor.moveToFirst();
             while(!cursor.isAfterLast()){
-                lists.add(cursor.getShoppingList(getShopItems()));
+                lists.add(cursor.getShoppingList(items));
                 cursor.moveToNext();
             }
         } finally {
@@ -173,10 +175,10 @@ public class InformationStorage {
         return lists;
     }
 
-    public ShoppingList getShoppingList(String listName) {
+    public ShoppingList getShoppingList(UUID id) {
         ShoppingListCursorWrapper cursor = queryShoppingLists(
-                ItemTable.Cols.ITEM_NAME + " = ?",
-                new String[]{listName}
+                ListTable.Cols.UUID + " = ?",
+                new String[]{id.toString()}
         );
 
         try {
@@ -282,8 +284,10 @@ public class InformationStorage {
         ContentValues values = new ContentValues();
         values.put(ListTable.Cols.UUID, list.getId().toString());
         values.put(ListTable.Cols.LIST_NAME, list.getName());
-        values.put(ListTable.Cols.ITEMS, transformStringArrayToString(list.getItemNames()));
-        values.put(ListTable.Cols.PURCHASED, transformBooleanListToString(list.getPurchased()));
+        if(!list.isEmpty()) { //only add these values if the list is not empty
+            values.put(ListTable.Cols.ITEMS, transformStringArrayToString(list.getItemNames()));
+            values.put(ListTable.Cols.PURCHASED, transformBooleanListToString(list.getPurchased()));
+        }
         return values;
     }
 

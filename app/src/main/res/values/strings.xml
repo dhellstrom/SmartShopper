@@ -3,4 +3,8 @@
     <string name="sdd_menu">New List</string>
     <string name="edit_stores_menu">Edit Stores</string>
     <string name="edit_items_menu">Edit Items</string>
+    <string name="shopping_list_name_label">Name</string>
+    <string name="shopping_list_contents_label">Contents</string>
+    <string name="shopping_list_name_hint">Shopping List</string>
+    <string name="shopping_list_search_hint">Enter item to add</string>
 </resources>

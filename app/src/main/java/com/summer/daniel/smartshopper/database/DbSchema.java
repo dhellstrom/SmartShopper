@@ -9,7 +9,7 @@ public class DbSchema {
         public static final String NAME = "stores";
 
         public static final class Cols{
-            public static final String STORE_NAME = "store name";
+            public static final String STORE_NAME = "storeName";
             public static final String LATITUDE = "latitude";
             public static final String LONGITUDE = "longitude";
             public static final String CATEGORIES = "categories";
@@ -20,7 +20,7 @@ public class DbSchema {
         public static final String NAME = "items";
 
         public static final class Cols{
-            public static final String ITEM_NAME = "item name";
+            public static final String ITEM_NAME = "itemName";
             public static final String CATEGORY = "category";
         }
 
@@ -30,7 +30,7 @@ public class DbSchema {
         public static final String NAME = "categories";
 
         public static final class Cols{
-            public static final String CATEGORY_NAME = "category name";
+            public static final String CATEGORY_NAME = "categoryName";
         }
     }
 
@@ -39,7 +39,7 @@ public class DbSchema {
 
         public static final class Cols{
             public static final String UUID = "uuid";
-            public static final String LIST_NAME = "list name";
+            public static final String LIST_NAME = "listName";
             public static final String ITEMS = "items";
             public static final String PURCHASED = "purchased";
         }

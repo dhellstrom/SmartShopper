@@ -89,6 +89,10 @@ public class ShoppingList {
         return mId;
     }
 
+    public void setName(String name){
+        mName = name;
+    }
+
     public String getName(){
         return mName;
     }
@@ -103,5 +107,9 @@ public class ShoppingList {
 
     public List<Boolean> getPurchased(){
         return mPurchased;
+    }
+
+    public boolean isEmpty(){
+        return mItems.size() == 0;
     }
 }
