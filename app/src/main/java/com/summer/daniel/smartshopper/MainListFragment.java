@@ -99,12 +99,14 @@ public class MainListFragment extends Fragment{
         }
 
         public void bindList(ShoppingList list){
-            mNameTextView.setText(list.getName());
+            mList = list;
+            mNameTextView.setText(mList.getName());
         }
 
         @Override
         public void onClick(View view){
-            //start new ShoppingListActivity
+            Intent intent = ShoppingListActivity.getIntent(getActivity(), mList.getId());
+            startActivity(intent);
         }
     }
 
