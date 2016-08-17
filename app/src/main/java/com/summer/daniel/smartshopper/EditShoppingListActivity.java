@@ -11,7 +11,7 @@ import java.util.UUID;
  */
 public class EditShoppingListActivity extends SingleFragmentActivity {
 
-    public static final String EXTRA_LIST_ID = "com.summer.daniel.smartshopper.list_id";
+    private static final String EXTRA_LIST_ID = "com.summer.daniel.smartshopper.editShoppingListActivity.list_id";
 
     protected Fragment createFragment(){
         return EditShoppingListFragment.newInstance(

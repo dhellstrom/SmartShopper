@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public class ShoppingListActivity extends SingleFragmentActivity {
 
-    private static final String EXTRA_LIST_ID = "com.summer.daniel.smartshopper.listId";
+    private static final String EXTRA_LIST_ID = "com.summer.daniel.smartshopper.shoppingListActivity.list_id";
 
     @Override
     protected Fragment createFragment() {
@@ -23,4 +23,6 @@ public class ShoppingListActivity extends SingleFragmentActivity {
 
         return intent;
     }
+
+
 }

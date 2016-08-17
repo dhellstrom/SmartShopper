@@ -81,7 +81,7 @@ public class MainListFragment extends Fragment{
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         super.onCreateOptionsMenu(menu, inflater);
 
-        inflater.inflate(R.menu.fragment_list, menu);
+        inflater.inflate(R.menu.fragment_main_list, menu);
     }
 
     private class ShoppingListHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

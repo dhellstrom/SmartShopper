@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,7 @@ import java.util.UUID;
  */
 public class EditShoppingListFragment extends Fragment {
 
-    private static final String ARGS_LIST_ID = "list id";
+    private static final String ARGS_LIST_ID = "com.summer.daniel.smartshopper.editShoppingListFragment.list_id";
 
     private EditText mListName;
     private RecyclerView mListContents;
@@ -45,7 +46,6 @@ public class EditShoppingListFragment extends Fragment {
             storage.addShoppingList(mList); //adds list on creation. Maybe change to avoid too many lists
         }else{
             mList = storage.getShoppingList(listId);
-            updateUI();
         }
     }
 
@@ -73,6 +73,8 @@ public class EditShoppingListFragment extends Fragment {
         });
 
         mListContents = (RecyclerView) v.findViewById(R.id.edit_list_recycler_view);
+
+        updateUI();
 
         return v;
 
