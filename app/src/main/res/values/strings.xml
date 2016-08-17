@@ -9,4 +9,5 @@
     <string name="shopping_list_search_hint">Enter item to add</string>
     <string name="edit_list_menu">Edit List</string>
     <string name="edit_list_delete_button">Delete</string>
+    <string name="delete_list_menu">Delete List</string>
 </resources>

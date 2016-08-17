@@ -203,6 +203,13 @@ public class InformationStorage {
                 new String[]{idString});
     }
 
+    public void deleteShoppingList(ShoppingList list){
+        String idString = list.getId().toString();
+        mDatabase.delete(ListTable.NAME,
+                ListTable.Cols.UUID + " = ?",
+                new String[]{idString});
+    }
+
     private StoreCursorWrapper queryStores(String whereClause, String[] whereArgs){
         Cursor cursor = mDatabase.query(
                 StoreTable.NAME,

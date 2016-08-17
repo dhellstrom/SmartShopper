@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -71,7 +70,9 @@ public class ShoppingListFragment extends Fragment {
     public void onPause(){
         super.onPause();
 
-        InformationStorage.get(getActivity()).updateShoppingList(mList);
+        if(mList != null) {
+            InformationStorage.get(getActivity()).updateShoppingList(mList);
+        }
     }
 
     @Override
@@ -96,7 +97,10 @@ public class ShoppingListFragment extends Fragment {
                 Intent intent = EditShoppingListActivity.getIntent(getActivity(), mList.getId());
                 startActivity(intent);
                 return true;
-
+            case R.id.menu_delete_list:
+                InformationStorage.get(getActivity()).deleteShoppingList(mList);
+                mList = null;
+                getActivity().finish();
             default:
                 return super.onOptionsItemSelected(item);
         }
