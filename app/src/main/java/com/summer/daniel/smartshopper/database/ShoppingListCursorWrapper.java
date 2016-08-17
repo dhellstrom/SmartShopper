@@ -2,6 +2,7 @@ package com.summer.daniel.smartshopper.database;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
+import android.util.Log;
 
 import com.summer.daniel.smartshopper.ShopItem;
 import com.summer.daniel.smartshopper.ShoppingList;
@@ -24,14 +25,15 @@ public class ShoppingListCursorWrapper extends CursorWrapper {
         String name = getString(getColumnIndex(ListTable.Cols.LIST_NAME));
 
         List<ShopItem> items = new ArrayList<>();
-        List < Boolean > purchased = new ArrayList<>();
+        List <Boolean> purchased = new ArrayList<>();
 
         int itemsIndex = getColumnIndex(ListTable.Cols.ITEMS);
         if(!isNull(itemsIndex)){
             //Uses list of saved items to give the correct category to items
             String[] itemsArray = getString(itemsIndex).split(";");
             for(int i = 0; i < itemsArray.length; i++){
-                items.add(new ShopItem(itemsArray[i], savedItems.get(savedItems.indexOf(itemsArray[i]))
+                items.add(new ShopItem(itemsArray[i], savedItems.get(savedItems
+                        .indexOf(new ShopItem(itemsArray[i], "")))
                         .getCategory()));
             }
         }
@@ -41,7 +43,7 @@ public class ShoppingListCursorWrapper extends CursorWrapper {
             String[] purchasedArray = getString(purchasedIndex).split(";");
             for (int i = 0; i < purchasedArray.length; i++) {
                 String b = purchasedArray[i];
-                if (b.equals(true)) {
+                if (b.equals("true")) {
                     purchased.add(true);
                 } else {
                     purchased.add(false);

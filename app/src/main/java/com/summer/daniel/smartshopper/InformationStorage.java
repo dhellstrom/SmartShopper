@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.summer.daniel.smartshopper.database.CategoryCursorWrapper;
 import com.summer.daniel.smartshopper.database.DatabaseHelper;
@@ -287,6 +288,9 @@ public class InformationStorage {
         if(!list.isEmpty()) { //only add these values if the list is not empty
             values.put(ListTable.Cols.ITEMS, transformStringArrayToString(list.getItemNames()));
             values.put(ListTable.Cols.PURCHASED, transformBooleanListToString(list.getPurchased()));
+        }else{ //put null if list is empty
+            values.putNull(ListTable.Cols.ITEMS);
+            values.putNull(ListTable.Cols.PURCHASED);
         }
         return values;
     }

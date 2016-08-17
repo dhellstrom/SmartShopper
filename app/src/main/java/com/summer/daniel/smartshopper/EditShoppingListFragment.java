@@ -1,16 +1,26 @@
 package com.summer.daniel.smartshopper;
 
+import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.CursorAdapter;
+import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -19,9 +29,14 @@ import java.util.UUID;
 public class EditShoppingListFragment extends Fragment {
 
     private static final String ARGS_LIST_ID = "com.summer.daniel.smartshopper.editShoppingListFragment.list_id";
+    private static final String CONST_CREATE_ITEM = "Create new item";
 
     private EditText mListName;
     private RecyclerView mListContents;
+    private SearchView mSearchView;
+
+    private ShopItemAdapter mItemAdapter;
+    private SimpleCursorAdapter mSearchAdapter;
 
     private ShoppingList mList;
 
@@ -47,6 +62,10 @@ public class EditShoppingListFragment extends Fragment {
         }else{
             mList = storage.getShoppingList(listId);
         }
+
+        mSearchAdapter = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_list_item_1,
+                null, new String[]{"itemName"}, new int[]{android.R.id.text1},
+                CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
     }
 
     @Override
@@ -73,6 +92,56 @@ public class EditShoppingListFragment extends Fragment {
         });
 
         mListContents = (RecyclerView) v.findViewById(R.id.edit_list_recycler_view);
+        mListContents.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        mSearchView = (SearchView) v.findViewById(R.id.edit_list_search_view);
+        mSearchView.setSuggestionsAdapter(mSearchAdapter);
+        mSearchView.setIconifiedByDefault(false);
+        mSearchView.setQueryHint(getActivity().getResources().getString(R.string.shopping_list_search_hint));
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                //do nothing
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                updateSearchAdapter(newText);
+                return false;
+            }
+        });
+        mSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener(){
+
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                Cursor cursor = (Cursor) mSearchAdapter.getItem(position);
+                String itemName;
+                try{
+                    cursor.moveToPosition(position);
+                    itemName = cursor.getString(cursor.getColumnIndex("itemName"));
+                }finally {
+                    cursor.close();
+                }
+                if(itemName.equals(CONST_CREATE_ITEM)){
+                    ShopItem newItem = new ShopItem(mSearchView.getQuery().toString(), "category");
+                    InformationStorage.get(getActivity()).addShopItem(newItem);
+                    mList.addItem(newItem);
+                }else{
+                    mList.addItem(InformationStorage.get(getActivity()).getShopItem(itemName));
+                    updateUI();
+                }
+
+                mSearchView.setQuery("", false);
+                return true;
+            }
+        });
 
         updateUI();
 
@@ -89,5 +158,92 @@ public class EditShoppingListFragment extends Fragment {
 
     private void updateUI(){
         mListName.setText(mList.getName());
+
+        List<ShopItem> items = mList.getItems();
+        if(mItemAdapter == null){
+            mItemAdapter = new ShopItemAdapter(items);
+            mListContents.setAdapter(mItemAdapter);
+        }else{
+            mItemAdapter.setItems(items);
+            mItemAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void updateSearchAdapter(String query){
+        List<ShopItem> items = InformationStorage.get(getActivity()).getShopItems();
+
+        MatrixCursor cursor = new MatrixCursor(new String[]{BaseColumns._ID, "itemName"});
+        for(int i = 0; i < items.size(); i++){
+            String itemName = items.get(i).getName();
+            if(itemName.toLowerCase().startsWith(query.toLowerCase())){
+                cursor.addRow(new Object[]{i, itemName});
+            }
+        }
+        if(cursor.getCount() == 0){
+            cursor.addRow(new Object[]{0, CONST_CREATE_ITEM});
+        }
+        mSearchAdapter.changeCursor(cursor);
+    }
+
+    private class ShopItemHolder extends RecyclerView.ViewHolder{
+
+        private TextView mNameTextView;
+        private TextView mCategoryTextView;
+        private Button mDeleteButton;
+
+        private ShopItem mItem;
+
+        public ShopItemHolder(View itemView){
+            super(itemView);
+
+            mNameTextView = (TextView) itemView.findViewById(R.id.edit_list_item_name);
+            mCategoryTextView = (TextView) itemView.findViewById(R.id.edit_list_item_category);
+            mDeleteButton = (Button) itemView.findViewById(R.id.edit_list_item_delete_button);
+            mDeleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mList.removeItem(mItem.getName());
+                    updateUI();
+                }
+            });
+        }
+
+        public void bindItem(ShopItem item){
+            mItem = item;
+            mNameTextView.setText(mItem.getName());
+            mCategoryTextView.setText(mItem.getCategory());
+        }
+    }
+
+    private class ShopItemAdapter extends RecyclerView.Adapter<ShopItemHolder>{
+
+        private List<ShopItem> mItems;
+
+        public ShopItemAdapter(List<ShopItem> items){
+            mItems = items;
+        }
+
+        @Override
+        public ShopItemHolder onCreateViewHolder(ViewGroup parent, int viewType){
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            View v = inflater.inflate(R.layout.item_edit_list, parent, false);
+
+            return new ShopItemHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(ShopItemHolder holder, int position){
+            ShopItem item = mItems.get(position);
+            holder.bindItem(item);
+        }
+
+        @Override
+        public int getItemCount(){
+            return mItems.size();
+        }
+
+        public void setItems(List<ShopItem> items){
+            mItems = items;
+        }
     }
 }

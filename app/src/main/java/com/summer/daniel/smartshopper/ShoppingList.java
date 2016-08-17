@@ -105,6 +105,10 @@ public class ShoppingList {
         return result;
     }
 
+    public List<ShopItem> getItems(){
+        return mItems;
+    }
+
     public List<Boolean> getPurchased(){
         return mPurchased;
     }

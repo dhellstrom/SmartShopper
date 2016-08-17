@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -104,14 +105,13 @@ public class ShoppingListFragment extends Fragment {
     public void updateUI(){
         mListName.setText(mList.getName());
 
-        InformationStorage storage = InformationStorage.get(getActivity());
-        List<ShopItem> items = storage.getShopItems();
+        List<ShopItem> items = mList.getItems();
 
         if(mAdapter == null){
             mAdapter = new ShopItemAdapter(items);
             mListContents.setAdapter(mAdapter);
         }else{
-            mAdapter.setLists(items);
+            mAdapter.setItems(items);
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -178,7 +178,7 @@ public class ShoppingListFragment extends Fragment {
             return mItems.size();
         }
 
-        public void setLists(List<ShopItem> items){
+        public void setItems(List<ShopItem> items){
             mItems = items;
         }
     }
