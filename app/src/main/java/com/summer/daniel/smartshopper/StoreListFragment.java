@@ -30,6 +30,10 @@ public class StoreListFragment extends AbstractListFragment {
         }
     }
 
+    protected Intent newObjectIntent(){
+        return EditStoreActivity.newIntent(getActivity(), null);
+    }
+
     private class StoreHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private TextView mNameTextView;

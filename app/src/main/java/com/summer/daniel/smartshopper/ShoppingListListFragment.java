@@ -27,19 +27,6 @@ public class ShoppingListListFragment extends AbstractListFragment {
         setHasOptionsMenu(true);
     }
 
-    protected void updateUI(RecyclerView recyclerView){
-        InformationStorage storage = InformationStorage.get(getActivity());
-        List<ShoppingList> lists = storage.getShoppingLists();
-
-        if(mAdapter == null){
-            mAdapter = new ShoppingListAdapter(lists);
-            recyclerView.setAdapter(mAdapter);
-        }else{
-            mAdapter.setLists(lists);
-            mAdapter.notifyDataSetChanged();
-        }
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         super.onCreateOptionsMenu(menu, inflater);
@@ -60,6 +47,23 @@ public class ShoppingListListFragment extends AbstractListFragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    protected void updateUI(RecyclerView recyclerView){
+        InformationStorage storage = InformationStorage.get(getActivity());
+        List<ShoppingList> lists = storage.getShoppingLists();
+
+        if(mAdapter == null){
+            mAdapter = new ShoppingListAdapter(lists);
+            recyclerView.setAdapter(mAdapter);
+        }else{
+            mAdapter.setLists(lists);
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    protected Intent newObjectIntent(){
+        return EditShoppingListActivity.newIntent(getActivity(), null);
     }
 
     private class ShoppingListHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

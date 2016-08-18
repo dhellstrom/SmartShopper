@@ -31,7 +31,7 @@ public abstract class AbstractListFragment extends Fragment{
         mNewListFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = EditShoppingListActivity.newIntent(getActivity(), null);
+                Intent intent = newObjectIntent();
                 startActivity(intent);
             }
         });
@@ -48,5 +48,7 @@ public abstract class AbstractListFragment extends Fragment{
     }
 
     protected abstract void updateUI(RecyclerView recyclerView);
+
+    protected abstract Intent newObjectIntent();
 
 }

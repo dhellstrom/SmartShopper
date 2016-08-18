@@ -13,7 +13,7 @@ public class EditStoreActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        return null;
+        return EditStoreFragment.newInstance(getIntent().getStringExtra(EXTRA_STORE_NAME));
     }
 
     public static Intent newIntent(Context context,String storeName){
