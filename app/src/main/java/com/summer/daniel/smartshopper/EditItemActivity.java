@@ -15,7 +15,7 @@ public class EditItemActivity extends SingleFragmentActivity {
         return EditItemFragment.newInstance(getIntent().getStringExtra(EXTRA_ITEM_NAME));
     }
 
-    public static Intent getIntent(Context context, String itemName){
+    public static Intent newIntent(Context context, String itemName){
         Intent intent = new Intent(context, EditItemActivity.class);
         intent.putExtra(EXTRA_ITEM_NAME, itemName);
         return intent;

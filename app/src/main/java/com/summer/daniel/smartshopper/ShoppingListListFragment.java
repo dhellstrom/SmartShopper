@@ -1,8 +1,12 @@
 package com.summer.daniel.smartshopper;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -15,6 +19,13 @@ import java.util.List;
 public class ShoppingListListFragment extends AbstractListFragment {
 
     private ShoppingListAdapter mAdapter;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+
+        setHasOptionsMenu(true);
+    }
 
     protected void updateUI(RecyclerView recyclerView){
         InformationStorage storage = InformationStorage.get(getActivity());
@@ -29,6 +40,28 @@ public class ShoppingListListFragment extends AbstractListFragment {
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        super.onCreateOptionsMenu(menu, inflater);
+
+        inflater.inflate(R.menu.fragment_main_list, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+            case R.id.menu_edit_stores:
+                Intent intent = new Intent(getActivity(), StoreListActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.menu_edit_items:
+                //start ItemsList
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private class ShoppingListHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private TextView mNameTextView;
@@ -38,7 +71,7 @@ public class ShoppingListListFragment extends AbstractListFragment {
         public ShoppingListHolder(View itemView){
             super(itemView);
 
-            mNameTextView = (TextView) itemView.findViewById(R.id.main_list_list_name);
+            mNameTextView = (TextView) itemView.findViewById(R.id.main_list_object_name);
 
             itemView.setOnClickListener(this);
         }
@@ -50,7 +83,7 @@ public class ShoppingListListFragment extends AbstractListFragment {
 
         @Override
         public void onClick(View view){
-            Intent intent = ShoppingListActivity.getIntent(getActivity(), mList.getId());
+            Intent intent = ShoppingListActivity.newIntent(getActivity(), mList.getId());
             startActivity(intent);
         }
     }

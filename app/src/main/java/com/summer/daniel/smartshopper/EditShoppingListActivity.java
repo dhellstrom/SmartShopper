@@ -18,7 +18,7 @@ public class EditShoppingListActivity extends SingleFragmentActivity {
                 (UUID) getIntent().getSerializableExtra(EXTRA_LIST_ID));
     }
 
-    public static Intent getIntent(Context context, UUID listId){
+    public static Intent newIntent(Context context, UUID listId){
         Intent intent = new Intent(context, EditShoppingListActivity.class);
         intent.putExtra(EXTRA_LIST_ID, listId);
         return intent;

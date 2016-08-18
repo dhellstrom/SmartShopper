@@ -14,7 +14,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -135,7 +134,7 @@ public class EditShoppingListFragment extends Fragment {
                     ShopItem newItem = new ShopItem(mSearchView.getQuery().toString(), ShopItem.NO_CATEGORY);
                     InformationStorage.get(getActivity()).addShopItem(newItem);
                     mList.addItem(newItem);
-                    Intent intent = EditItemActivity.getIntent(getActivity(), newItem.getName());
+                    Intent intent = EditItemActivity.newIntent(getActivity(), newItem.getName());
                     startActivity(intent);
                 }else{
                     mList.addItem(InformationStorage.get(getActivity()).getShopItem(itemName));

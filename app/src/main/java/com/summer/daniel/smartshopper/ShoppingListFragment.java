@@ -91,7 +91,7 @@ public class ShoppingListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
             case R.id.menu_edit_list:
-                Intent intent = EditShoppingListActivity.getIntent(getActivity(), mList.getId());
+                Intent intent = EditShoppingListActivity.newIntent(getActivity(), mList.getId());
                 startActivity(intent);
                 return true;
             case R.id.menu_delete_list:

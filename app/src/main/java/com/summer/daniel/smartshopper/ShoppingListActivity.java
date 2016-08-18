@@ -17,7 +17,7 @@ public class ShoppingListActivity extends SingleFragmentActivity {
                 (UUID) getIntent().getSerializableExtra(EXTRA_LIST_ID));
     }
 
-    public static Intent getIntent(Context context, UUID listId){
+    public static Intent newIntent(Context context, UUID listId){
         Intent intent = new Intent(context, ShoppingListActivity.class);
         intent.putExtra(EXTRA_LIST_ID, listId);
 

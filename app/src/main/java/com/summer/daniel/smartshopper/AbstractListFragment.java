@@ -7,13 +7,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import java.util.List;
 
 /**
  * Created by Daniel on 2016-08-10.
@@ -36,7 +31,7 @@ public abstract class AbstractListFragment extends Fragment{
         mNewListFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = EditShoppingListActivity.getIntent(getActivity(), null);
+                Intent intent = EditShoppingListActivity.newIntent(getActivity(), null);
                 startActivity(intent);
             }
         });
