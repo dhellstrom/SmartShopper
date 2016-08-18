@@ -25,8 +25,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EditShoppingListActivity"></activity>
-        <activity android:name=".ShoppingListActivity"></activity>
+        <activity android:name=".EditShoppingListActivity" />
+        <activity android:name=".ShoppingListActivity" />
+        <activity android:name=".EditItemActivity"></activity>
     </application>
 
 </manifest>

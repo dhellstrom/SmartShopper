@@ -130,6 +130,14 @@ public class InformationStorage {
         }
     }
 
+    public void updateShopItem(ShopItem item){
+        String itemName = item.getName();
+        ContentValues values = getContentValues(item);
+        mDatabase.update(ItemTable.NAME, values,
+                ItemTable.Cols.ITEM_NAME + " = ?",
+                new String[]{itemName});
+    }
+
     public void addCategory(String category){
         ContentValues values = getContentValues(category);
         mDatabase.insert(CategoryTable.NAME, null, values);

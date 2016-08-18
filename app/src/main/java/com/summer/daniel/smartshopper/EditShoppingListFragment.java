@@ -1,5 +1,6 @@
 package com.summer.daniel.smartshopper;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.os.Bundle;
@@ -130,9 +131,11 @@ public class EditShoppingListFragment extends Fragment {
                     cursor.close();
                 }
                 if(itemName.equals(CONST_CREATE_ITEM)){
-                    ShopItem newItem = new ShopItem(mSearchView.getQuery().toString(), "category");
+                    ShopItem newItem = new ShopItem(mSearchView.getQuery().toString(), ShopItem.NO_CATEGORY);
                     InformationStorage.get(getActivity()).addShopItem(newItem);
                     mList.addItem(newItem);
+                    Intent intent = EditItemActivity.getIntent(getActivity(), newItem.getName());
+                    startActivity(intent);
                 }else{
                     mList.addItem(InformationStorage.get(getActivity()).getShopItem(itemName));
                     updateUI();
@@ -154,6 +157,14 @@ public class EditShoppingListFragment extends Fragment {
         super.onPause();
 
         InformationStorage.get(getActivity()).updateShoppingList(mList);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        mList = InformationStorage.get(getActivity()).getShoppingList(mList.getId());
+        updateUI();
     }
 
     private void updateUI(){

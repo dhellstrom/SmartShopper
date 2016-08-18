@@ -5,6 +5,8 @@ package com.summer.daniel.smartshopper;
  */
 public class ShopItem {
 
+    public static final String NO_CATEGORY = "No category";
+
     private String mName;
     private String mCategory;
 
@@ -13,8 +15,16 @@ public class ShopItem {
         mCategory = category;
     }
 
+    public void setName(String name){
+        mName = name;
+    }
+
     public String getName(){
         return mName;
+    }
+
+    public void setCategory(String category){
+        mCategory = category;
     }
 
     public String getCategory(){
