@@ -3,6 +3,7 @@ package com.summer.daniel.smartshopper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -25,7 +26,6 @@ public class ShoppingListFragment extends Fragment {
 
     private static final String ARGS_LIST_ID = "com.summer.daniel.smartshopper.shoppingListFragment.list_id";
 
-    private TextView mListName;
     private RecyclerView mListContents;
     private ShopItemAdapter mAdapter;
 
@@ -54,9 +54,6 @@ public class ShoppingListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup parent,
                              Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_shopping_list, parent, false);
-
-        mListName = (TextView) v.findViewById(R.id.shopping_list_name);
-        mListName.setText(mList.getName());
 
         mListContents = (RecyclerView) v.findViewById(R.id.shopping_list_recycler_view);
         mListContents.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -107,7 +104,8 @@ public class ShoppingListFragment extends Fragment {
     }
 
     public void updateUI(){
-        mListName.setText(mList.getName());
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.setTitle(mList.getName());
 
         List<ShopItem> items = mList.getItems();
 

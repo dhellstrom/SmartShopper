@@ -8,6 +8,7 @@ import android.provider.BaseColumns;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -145,6 +146,9 @@ public class EditShoppingListFragment extends Fragment {
                 return true;
             }
         });
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.setTitle(R.string.edit_list_title);
 
         updateUI();
 

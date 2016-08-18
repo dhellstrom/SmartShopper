@@ -2,6 +2,7 @@ package com.summer.daniel.smartshopper;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -83,6 +84,9 @@ public class EditItemFragment extends Fragment {
             }
         });
 
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.setTitle(R.string.edit_item_title);
+
         return v;
     }
 
@@ -94,6 +98,7 @@ public class EditItemFragment extends Fragment {
         storage.updateShopItem(mItem);
 
         //only add as new category if relevant
+        //maybe optimize by implementing method in storage
         List<String> categories = storage.getCategories();
         if(!categories.contains(mItem.getCategory()) && !mItem.getCategory().equals(ShopItem.NO_CATEGORY)){
             storage.addCategory(mItem.getCategory());

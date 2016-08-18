@@ -10,12 +10,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.summer.daniel.smartshopper.ShoppingListActivity">
 
-    <TextView
-        android:id="@+id/shopping_list_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"/>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/shopping_list_recycler_view"
         android:layout_width="match_parent"

@@ -12,4 +12,6 @@
     <string name="delete_list_menu">Delete List</string>
     <string name="edit_item_name">Name:</string>
     <string name="edit_item_category">Category:</string>
+    <string name="edit_list_title">Edit List</string>
+    <string name="edit_item_title">Edit Item</string>
 </resources>
