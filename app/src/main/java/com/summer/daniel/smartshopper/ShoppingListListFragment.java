@@ -1,14 +1,8 @@
 package com.summer.daniel.smartshopper;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -16,72 +10,23 @@ import android.widget.TextView;
 import java.util.List;
 
 /**
- * Created by Daniel on 2016-08-10.
+ * Created by Daniel on 2016-08-18.
  */
-public class MainListFragment extends Fragment{
-
-    private RecyclerView mRecyclerView;
-    private FloatingActionButton mNewListFab;
+public class ShoppingListListFragment extends AbstractListFragment {
 
     private ShoppingListAdapter mAdapter;
 
-    public static Fragment newInstance(){
-        return new MainListFragment();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-
-        setHasOptionsMenu(true);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState){
-        View v = inflater.inflate(R.layout.fragment_main_list, container, false);
-
-        mRecyclerView = (RecyclerView) v.findViewById(R.id.main_list_recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        mNewListFab = (FloatingActionButton) v.findViewById(R.id.fab_new_list);
-        mNewListFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = EditShoppingListActivity.getIntent(getActivity(), null);
-                startActivity(intent);
-            }
-        });
-
-        updateUI();
-        return v;
-    }
-
-    @Override
-    public void onResume(){
-        super.onResume();
-
-        updateUI();
-    }
-
-    private void updateUI(){
+    protected void updateUI(RecyclerView recyclerView){
         InformationStorage storage = InformationStorage.get(getActivity());
         List<ShoppingList> lists = storage.getShoppingLists();
 
         if(mAdapter == null){
             mAdapter = new ShoppingListAdapter(lists);
-            mRecyclerView.setAdapter(mAdapter);
+            recyclerView.setAdapter(mAdapter);
         }else{
             mAdapter.setLists(lists);
             mAdapter.notifyDataSetChanged();
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-        super.onCreateOptionsMenu(menu, inflater);
-
-        inflater.inflate(R.menu.fragment_main_list, menu);
     }
 
     private class ShoppingListHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -141,6 +86,4 @@ public class MainListFragment extends Fragment{
             mLists = lists;
         }
     }
-
-
 }
