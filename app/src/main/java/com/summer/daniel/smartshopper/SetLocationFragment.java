@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -65,7 +68,7 @@ public class SetLocationFragment extends SupportMapFragment {
                         if (mStore.hasLocation()) {
                             //display store location if available
                             mDisplayLocation = mStore.getLocation();
-                            moveToLocation();
+                            moveToLocation(true);
                         } else {
                             //display user location otherwise
                             getUserLocation();
@@ -85,11 +88,8 @@ public class SetLocationFragment extends SupportMapFragment {
                 mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                     @Override
                     public void onMapClick(LatLng latLng) {
-                        if(mMapMarker == null){
-                            mMapMarker = mMap.addMarker(new MarkerOptions().position(latLng));
-                        }else{
-                            mMapMarker.setPosition(latLng);
-                        }
+                        placeMarker(latLng);
+                        getActivity().invalidateOptionsMenu();
                     }
                 });
             }
@@ -108,6 +108,29 @@ public class SetLocationFragment extends SupportMapFragment {
         super.onStop();
 
         mClient.disconnect();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_set_location, menu);
+
+        MenuItem confirmItem = menu.findItem(R.id.menu_confirm_location);
+        confirmItem.setVisible(mMapMarker != null);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+            case R.id.menu_confirm_location:
+                mStore.setLocation(mMapMarker.getPosition());
+                InformationStorage.get(getActivity()).updateStore(mStore);
+                getActivity().finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 
     @Override
@@ -135,7 +158,7 @@ public class SetLocationFragment extends SupportMapFragment {
                         @Override
                         public void onLocationChanged(Location location) {
                             mDisplayLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                            moveToLocation();
+                            moveToLocation(false);
                         }
                     });
         }else {
@@ -145,9 +168,20 @@ public class SetLocationFragment extends SupportMapFragment {
         }
     }
 
-    private void moveToLocation(){
+    private void moveToLocation(boolean placeMarker){
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mDisplayLocation, 15);
         mMap.animateCamera(cameraUpdate);
+        if(placeMarker){
+            placeMarker(mDisplayLocation);
+        }
+    }
+
+    private void placeMarker(LatLng latLng){
+        if(mMapMarker == null){
+            mMapMarker = mMap.addMarker(new MarkerOptions().position(latLng));
+        }else{
+            mMapMarker.setPosition(latLng);
+        }
     }
 
 

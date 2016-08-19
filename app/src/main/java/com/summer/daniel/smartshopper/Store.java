@@ -39,6 +39,10 @@ public class Store {
         return mName;
     }
 
+    public void setLocation(LatLng location){
+        mLocation = location;
+    }
+
     public LatLng getLocation(){
         return mLocation;
     }

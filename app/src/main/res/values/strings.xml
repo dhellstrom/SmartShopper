@@ -17,4 +17,5 @@
     <string name="edit_store_label">Name</string>
     <string name="set_location_button">Set Location</string>
     <string name="add_category_button">Add Categories</string>
+    <string name="confirm_location_menu">Confirm Location</string>
 </resources>
