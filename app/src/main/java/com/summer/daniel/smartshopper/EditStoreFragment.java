@@ -1,10 +1,13 @@
 package com.summer.daniel.smartshopper;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +25,7 @@ public class EditStoreFragment extends Fragment {
 
     private EditText mNameField;
     private Button mSetLocationButton, mAddCategoryButton;
+    private RecyclerView mStoreCategoriesView;
 
     private Store mStore;
     private CategoryAdapter mAdapter;
@@ -29,7 +33,6 @@ public class EditStoreFragment extends Fragment {
     public static Fragment newInstance(String storeName){
         Bundle args = new Bundle();
         args.putString(ARGS_STORE_NAME, storeName);
-
         EditStoreFragment fragment = new EditStoreFragment();
         fragment.setArguments(args);
         return fragment;
@@ -41,10 +44,12 @@ public class EditStoreFragment extends Fragment {
 
         String storeName = getArguments().getString(ARGS_STORE_NAME);
 
+        InformationStorage storage = InformationStorage.get(getActivity());
         if(storeName == null){
-            mStore = new Store("New Store", null); //TODO save store to db when going back, and only if location is selected
+            mStore = new Store("New Store", null);
+            storage.addStore(mStore);
         }else{
-            mStore = InformationStorage.get(getActivity()).getStore(storeName);
+            mStore = storage.getStore(storeName);
         }
     }
 
@@ -53,6 +58,7 @@ public class EditStoreFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_edit_store, parent, false);
 
         mNameField = (EditText) v.findViewById(R.id.edit_store_name_field);
+        mNameField.setText(mStore.getName());
         mNameField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -74,7 +80,8 @@ public class EditStoreFragment extends Fragment {
         mSetLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO start LocationActivity
+                Intent intent = SetLocationActivity.newIntent(getActivity(), mStore.getName());
+                startActivity(intent);
             }
         });
 
@@ -86,12 +93,40 @@ public class EditStoreFragment extends Fragment {
             }
         });
 
+        mStoreCategoriesView = (RecyclerView) v.findViewById(R.id.edit_store_category_recycler_view);
+        mStoreCategoriesView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         updateUI();
 
         return v;
     }
 
+    @Override
+    public void onPause(){
+        super.onPause();
+
+        InformationStorage.get(getActivity()).updateStore(mStore);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        Store temp = InformationStorage.get(getActivity()).getStore(mStore.getName());
+        if(temp != null){
+            mStore = temp;
+        }
+        updateUI();
+    }
+
     private void updateUI(){
+        if(mAdapter == null){
+            mAdapter = new CategoryAdapter(mStore.getCategories());
+            mStoreCategoriesView.setAdapter(mAdapter);
+        }else{
+            mAdapter.setCategories(mStore.getCategories());
+            mAdapter.notifyDataSetChanged();
+        }
 
     }
 

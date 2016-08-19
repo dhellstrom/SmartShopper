@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.summer.daniel.smartshopper.database.CategoryCursorWrapper;
 import com.summer.daniel.smartshopper.database.DatabaseHelper;
 import com.summer.daniel.smartshopper.database.DbSchema.CategoryTable;
@@ -277,9 +278,16 @@ public class InformationStorage {
     private static ContentValues getContentValues(Store store){
         ContentValues values = new ContentValues();
         values.put(StoreTable.Cols.STORE_NAME, store.getName());
-        values.put(StoreTable.Cols.LATITUDE, store.getLocation().latitude);
-        values.put(StoreTable.Cols.LONGITUDE, store.getLocation().longitude);
-        values.put(StoreTable.Cols.CATEGORIES, transformStringArrayToString(store.getCategories()));
+        LatLng location = store.getLocation();
+        if(location != null) {
+            values.put(StoreTable.Cols.LATITUDE, location.latitude);
+            values.put(StoreTable.Cols.LONGITUDE, location.longitude);
+        }
+        if(store.getNumberOfCategories() > 0) {
+            values.put(StoreTable.Cols.CATEGORIES, transformStringArrayToString(store.getCategories()));
+        }else{
+            values.putNull(StoreTable.Cols.CATEGORIES);
+        }
         return values;
     }
 
