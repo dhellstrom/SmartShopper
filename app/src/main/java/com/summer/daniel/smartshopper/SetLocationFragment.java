@@ -6,6 +6,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -17,6 +18,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.UUID;
 
@@ -26,6 +29,8 @@ import java.util.UUID;
  */
 public class SetLocationFragment extends SupportMapFragment {
 
+    private static final String TAG = "SetLocation";
+
     private static final String ARG_STORE_ID = "com.summer.daniel.smartshopper.setLocationFragment.storeId";
     private static final int REQUEST_LOCATION_PERMISSION = 0;
 
@@ -33,6 +38,7 @@ public class SetLocationFragment extends SupportMapFragment {
     private GoogleApiClient mClient;
     private GoogleMap mMap;
     private LatLng mDisplayLocation;
+    private Marker mMapMarker;
 
     public static SetLocationFragment newInstance(UUID storeId) {
         Bundle args = new Bundle();
@@ -46,6 +52,7 @@ public class SetLocationFragment extends SupportMapFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
         UUID storeId = (UUID) getArguments().getSerializable(ARG_STORE_ID);
         mStore = InformationStorage.get(getActivity()).getStore(storeId);
@@ -58,15 +65,12 @@ public class SetLocationFragment extends SupportMapFragment {
                         if (mStore.hasLocation()) {
                             //display store location if available
                             mDisplayLocation = mStore.getLocation();
+                            moveToLocation();
                         } else {
                             //display user location otherwise
                             getUserLocation();
                         }
-                        if (mDisplayLocation != null) {
-                            moveToLocation();
-                        }
                     }
-
                     @Override
                     public void onConnectionSuspended(int i) {
                         //do nothing
@@ -78,6 +82,16 @@ public class SetLocationFragment extends SupportMapFragment {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 mMap = googleMap;
+                mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                    @Override
+                    public void onMapClick(LatLng latLng) {
+                        if(mMapMarker == null){
+                            mMapMarker = mMap.addMarker(new MarkerOptions().position(latLng));
+                        }else{
+                            mMapMarker.setPosition(latLng);
+                        }
+                    }
+                });
             }
         });
     }
@@ -105,6 +119,10 @@ public class SetLocationFragment extends SupportMapFragment {
         }
     }
 
+    /**
+     * Checks for permission to use location. Requests permission if it had not been granted earlier.
+     * Gets the user location and moves the map to it.
+     */
     private void getUserLocation() {
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -117,6 +135,7 @@ public class SetLocationFragment extends SupportMapFragment {
                         @Override
                         public void onLocationChanged(Location location) {
                             mDisplayLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                            moveToLocation();
                         }
                     });
         }else {

@@ -70,7 +70,6 @@ public class EditStoreFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 mStore.setName(charSequence.toString());
-                Log.d("EditStore", "new name: " + mStore.getName());
             }
 
             @Override
@@ -109,7 +108,6 @@ public class EditStoreFragment extends Fragment {
         super.onPause();
 
         InformationStorage.get(getActivity()).updateStore(mStore);
-        Log.d("EditStore", "Updated! Name: " + mStore.getName());
     }
 
     @Override
