@@ -25,12 +25,20 @@ public class Store {
         this(name, location, new String[11]);
     }
 
+    public void setName(String name){
+        mName = name;
+    }
+
     public String getName(){
         return mName;
     }
 
     public LatLng getLocation(){
         return mLocation;
+    }
+
+    public boolean hasLocation(){
+        return mLocation != null;
     }
 
     public String[] getCategories(){
@@ -65,13 +73,27 @@ public class Store {
         return mNumberOfCategories;
     }
 
-    public void increasePriority(int pos){
+    public void increasePriority(String category){
+        int pos = -1;
+        for(int i = 0; i < mNumberOfCategories; i++){
+            if(mCategories[i].equals(category)){
+                pos = i;
+                break;
+            }
+        }
         String temp = mCategories[pos];
         mCategories[pos] = mCategories[pos-1];
         mCategories[pos-1] = temp;
     }
 
-    public void decreasePriority(int pos){
+    public void decreasePriority(String category){
+        int pos = -1;
+        for(int i = 0; i < mNumberOfCategories; i++){
+            if(mCategories[i].equals(category)){
+                pos = i;
+                break;
+            }
+        }
         String temp = mCategories[pos];
         mCategories[pos] = mCategories[pos+1];
         mCategories[pos+1] = temp;

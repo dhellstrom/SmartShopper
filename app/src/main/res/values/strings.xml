@@ -14,4 +14,7 @@
     <string name="edit_item_category">Category:</string>
     <string name="edit_list_title">Edit List</string>
     <string name="edit_item_title">Edit Item</string>
+    <string name="edit_store_label">Name</string>
+    <string name="set_location_button">Set Location</string>
+    <string name="add_category_button">Add Categories</string>
 </resources>
