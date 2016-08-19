@@ -23,6 +23,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + StoreTable.NAME + "(" +
         "_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+        StoreTable.Cols.UUID + ", " +
         StoreTable.Cols.STORE_NAME + ", " +
         StoreTable.Cols.LATITUDE + ", " +
         StoreTable.Cols.LONGITUDE + ", " +

@@ -35,7 +35,7 @@ public class StoreTest {
         store.addCategory("category0");
         store.addCategory("category1");
         store.addCategory("category2");
-        store.increasePriority(1);
+        store.increasePriority("category1");
 
         String[] expected = {"category1", "category0", "category2"};
 
@@ -47,7 +47,7 @@ public class StoreTest {
         store.addCategory("category0");
         store.addCategory("category1");
         store.addCategory("category2");
-        store.decreasePriority(1);
+        store.decreasePriority("category1");
 
         String[] expected = {"category0", "category2", "category1"};
 

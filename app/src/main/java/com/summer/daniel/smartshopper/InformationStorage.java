@@ -64,10 +64,10 @@ public class InformationStorage {
         return stores;
     }
 
-    public Store getStore(String storeName){
+    public Store getStore(UUID id){
         StoreCursorWrapper cursor = queryStores(
-                StoreTable.Cols.STORE_NAME + " = ?",
-                new String[]{storeName}
+                StoreTable.Cols.UUID + " = ?",
+                new String[]{id.toString()}
         );
 
         try{
@@ -83,12 +83,12 @@ public class InformationStorage {
     }
 
     public void updateStore(Store store){
-        String name = store.getName();
+        String idString = store.getId().toString();
         ContentValues values = getContentValues(store);
 
         mDatabase.update(StoreTable.NAME, values,
-                StoreTable.Cols.STORE_NAME + " = ?",
-                new String[]{name});
+                StoreTable.Cols.UUID + " = ?",
+                new String[]{idString});
     }
 
     public void addShopItem(ShopItem item){
@@ -277,6 +277,7 @@ public class InformationStorage {
 
     private static ContentValues getContentValues(Store store){
         ContentValues values = new ContentValues();
+        values.put(StoreTable.Cols.UUID, store.getId().toString());
         values.put(StoreTable.Cols.STORE_NAME, store.getName());
         LatLng location = store.getLocation();
         if(location != null) {

@@ -7,6 +7,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.summer.daniel.smartshopper.Store;
 import com.summer.daniel.smartshopper.database.DbSchema.StoreTable;
 
+import java.util.UUID;
+
 /**
  * Created by Daniel on 2016-08-11.
  */
@@ -16,6 +18,7 @@ public class StoreCursorWrapper extends CursorWrapper {
     }
 
     public Store getStore(){
+        String uuidString = getString(getColumnIndex(StoreTable.Cols.UUID));
         String name = getString(getColumnIndex(StoreTable.Cols.STORE_NAME));
         LatLng location = null;
         int latIndex = getColumnIndex(StoreTable.Cols.LATITUDE);
@@ -33,6 +36,6 @@ public class StoreCursorWrapper extends CursorWrapper {
             categories = new String[11];
         }
 
-        return new Store(name, location, categories);
+        return new Store(UUID.fromString(uuidString), name, location, categories);
     }
 }

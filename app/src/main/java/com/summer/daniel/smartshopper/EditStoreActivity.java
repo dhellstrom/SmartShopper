@@ -3,22 +3,22 @@ package com.summer.daniel.smartshopper;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+
+import java.util.UUID;
 
 public class EditStoreActivity extends SingleFragmentActivity {
 
-    private static final String EXTRA_STORE_NAME = "com.summer.daniel.smartshopper.editStoreActivity.storeName";
+    private static final String EXTRA_STORE_ID = "com.summer.daniel.smartshopper.editStoreActivity.storeId";
 
 
     @Override
     protected Fragment createFragment() {
-        return EditStoreFragment.newInstance(getIntent().getStringExtra(EXTRA_STORE_NAME));
+        return EditStoreFragment.newInstance((UUID) getIntent().getSerializableExtra(EXTRA_STORE_ID));
     }
 
-    public static Intent newIntent(Context context,String storeName){
+    public static Intent newIntent(Context context, UUID storeId){
         Intent intent = new Intent(context, EditStoreActivity.class);
-        intent.putExtra(EXTRA_STORE_NAME, storeName);
+        intent.putExtra(EXTRA_STORE_ID, storeId);
         return intent;
     }
 }

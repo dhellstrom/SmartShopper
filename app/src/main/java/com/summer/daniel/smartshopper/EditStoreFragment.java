@@ -16,12 +16,14 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.util.UUID;
+
 /**
  * Created by Daniel on 2016-08-18.
  */
 public class EditStoreFragment extends Fragment {
 
-    private static final String ARGS_STORE_NAME = "com.summer.daniel.smartshopper.editStoreFragment.storeName";
+    private static final String ARGS_STORE_ID = "com.summer.daniel.smartshopper.editStoreFragment.storeId";
 
     private EditText mNameField;
     private Button mSetLocationButton, mAddCategoryButton;
@@ -30,9 +32,9 @@ public class EditStoreFragment extends Fragment {
     private Store mStore;
     private CategoryAdapter mAdapter;
 
-    public static Fragment newInstance(String storeName){
+    public static Fragment newInstance(UUID storeId){
         Bundle args = new Bundle();
-        args.putString(ARGS_STORE_NAME, storeName);
+        args.putSerializable(ARGS_STORE_ID, storeId);
         EditStoreFragment fragment = new EditStoreFragment();
         fragment.setArguments(args);
         return fragment;
@@ -42,14 +44,14 @@ public class EditStoreFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-        String storeName = getArguments().getString(ARGS_STORE_NAME);
+        UUID storeId = (UUID) getArguments().getSerializable(ARGS_STORE_ID);
 
         InformationStorage storage = InformationStorage.get(getActivity());
-        if(storeName == null){
+        if(storeId == null){
             mStore = new Store("New Store", null);
             storage.addStore(mStore);
         }else{
-            mStore = storage.getStore(storeName);
+            mStore = storage.getStore(storeId);
         }
     }
 
@@ -68,6 +70,7 @@ public class EditStoreFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 mStore.setName(charSequence.toString());
+                Log.d("EditStore", "new name: " + mStore.getName());
             }
 
             @Override
@@ -80,7 +83,7 @@ public class EditStoreFragment extends Fragment {
         mSetLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = SetLocationActivity.newIntent(getActivity(), mStore.getName());
+                Intent intent = SetLocationActivity.newIntent(getActivity(), mStore.getId());
                 startActivity(intent);
             }
         });
@@ -106,13 +109,14 @@ public class EditStoreFragment extends Fragment {
         super.onPause();
 
         InformationStorage.get(getActivity()).updateStore(mStore);
+        Log.d("EditStore", "Updated! Name: " + mStore.getName());
     }
 
     @Override
     public void onResume(){
         super.onResume();
 
-        Store temp = InformationStorage.get(getActivity()).getStore(mStore.getName());
+        Store temp = InformationStorage.get(getActivity()).getStore(mStore.getId());
         if(temp != null){
             mStore = temp;
         }

@@ -4,27 +4,33 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.UUID;
 
 /**
  * Created by Daniel on 2016-08-10.
  */
 public class Store {
 
+    private UUID mId;
     private String mName;
     private LatLng mLocation;
     private String[] mCategories;
     private int mNumberOfCategories;
 
-    public Store(String name, LatLng location, String[] categories){
+    public Store(UUID id, String name, LatLng location, String[] categories){
+        mId = id;
         mName = name;
         mLocation = location;
         mCategories = categories;
     }
 
     public Store(String name, LatLng location){
-        this(name, location, new String[11]);
+        this(UUID.randomUUID(), name, location, new String[11]);
     }
 
+    public UUID getId(){
+        return mId;
+    }
     public void setName(String name){
         mName = name;
     }

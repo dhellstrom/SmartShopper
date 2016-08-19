@@ -55,7 +55,7 @@ public class StoreListFragment extends AbstractListFragment {
 
         @Override
         public void onClick(View view){
-            Intent intent = EditStoreActivity.newIntent(getActivity(), mStore.getName());
+            Intent intent = EditStoreActivity.newIntent(getActivity(), mStore.getId());
             startActivity(intent);
         }
     }

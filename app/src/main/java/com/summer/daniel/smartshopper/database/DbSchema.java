@@ -9,6 +9,7 @@ public class DbSchema {
         public static final String NAME = "stores";
 
         public static final class Cols{
+            public static final String UUID = "uuid";
             public static final String STORE_NAME = "storeName";
             public static final String LATITUDE = "latitude";
             public static final String LONGITUDE = "longitude";
