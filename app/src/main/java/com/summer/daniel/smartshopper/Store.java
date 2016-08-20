@@ -22,6 +22,11 @@ public class Store {
         mName = name;
         mLocation = location;
         mCategories = categories;
+        int i = 0;
+        while(i < mCategories.length && mCategories[i] != null){
+            i++;
+        }
+        mNumberOfCategories = i;
     }
 
     public Store(String name, LatLng location){
@@ -91,9 +96,11 @@ public class Store {
                 break;
             }
         }
-        String temp = mCategories[pos];
-        mCategories[pos] = mCategories[pos-1];
-        mCategories[pos-1] = temp;
+        if(pos > 0) {
+            String temp = mCategories[pos];
+            mCategories[pos] = mCategories[pos - 1];
+            mCategories[pos - 1] = temp;
+        }
     }
 
     public void decreasePriority(String category){
@@ -104,8 +111,10 @@ public class Store {
                 break;
             }
         }
-        String temp = mCategories[pos];
-        mCategories[pos] = mCategories[pos+1];
-        mCategories[pos+1] = temp;
+        if(pos > -1 && pos < mNumberOfCategories - 1) {
+            String temp = mCategories[pos];
+            mCategories[pos] = mCategories[pos + 1];
+            mCategories[pos + 1] = temp;
+        }
     }
 }

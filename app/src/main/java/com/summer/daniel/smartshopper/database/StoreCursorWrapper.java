@@ -2,6 +2,7 @@ package com.summer.daniel.smartshopper.database;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.summer.daniel.smartshopper.Store;

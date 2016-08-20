@@ -23,6 +23,8 @@ import java.util.UUID;
  */
 public class EditStoreFragment extends Fragment {
 
+    private static final String TAG = "EditStore";
+
     private static final String ARGS_STORE_ID = "com.summer.daniel.smartshopper.editStoreFragment.storeId";
 
     private EditText mNameField;
@@ -91,7 +93,8 @@ public class EditStoreFragment extends Fragment {
         mAddCategoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO start addCategoriesActivity
+                Intent intent = AddCategoriesActivity.newIntent(getActivity(), mStore.getId());
+                startActivity(intent);
             }
         });
 
@@ -118,6 +121,10 @@ public class EditStoreFragment extends Fragment {
         if(temp != null){
             mStore = temp;
         }
+        String[] cat = mStore.getCategories();
+        /*for(String s : cat){
+            Log.d(TAG, s);
+        }*/
         updateUI();
     }
 

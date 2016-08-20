@@ -26,6 +26,8 @@ import java.util.UUID;
  */
 public class InformationStorage {
 
+    private static String TAG = "InfoStorage";
+
     private static InformationStorage sInformationStorage;
     private Context mContext;
     private SQLiteDatabase mDatabase;
@@ -285,6 +287,7 @@ public class InformationStorage {
             values.put(StoreTable.Cols.LONGITUDE, location.longitude);
         }
         if(store.getNumberOfCategories() > 0) {
+            Log.d(TAG, transformStringArrayToString(store.getCategories()));
             values.put(StoreTable.Cols.CATEGORIES, transformStringArrayToString(store.getCategories()));
         }else{
             values.putNull(StoreTable.Cols.CATEGORIES);
