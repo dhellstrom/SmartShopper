@@ -8,6 +8,11 @@
         app:showAsAction="ifRoom"/>
 
     <item
+        android:id="@+id/menu_update_list"
+        android:title="@string/update_list_menu"
+        app:showAsAction="ifRoom"/>
+
+    <item
         android:id="@+id/menu_delete_list"
         android:title="@string/delete_list_menu"
         app:showAsAction="never"/>
