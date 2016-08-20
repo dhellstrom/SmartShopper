@@ -93,6 +93,14 @@ public class InformationStorage {
                 new String[]{idString});
     }
 
+    public void deleteStore(Store store){
+        String idString = store.getId().toString();
+
+        mDatabase.delete(StoreTable.NAME,
+                StoreTable.Cols.UUID + " = ?",
+                new String[]{idString});
+    }
+
     public void addShopItem(ShopItem item){
         ContentValues values = getContentValues(item);
         mDatabase.insert(ItemTable.NAME, null, values);
@@ -287,7 +295,6 @@ public class InformationStorage {
             values.put(StoreTable.Cols.LONGITUDE, location.longitude);
         }
         if(store.getNumberOfCategories() > 0) {
-            Log.d(TAG, transformStringArrayToString(store.getCategories()));
             values.put(StoreTable.Cols.CATEGORIES, transformStringArrayToString(store.getCategories()));
         }else{
             values.putNull(StoreTable.Cols.CATEGORIES);

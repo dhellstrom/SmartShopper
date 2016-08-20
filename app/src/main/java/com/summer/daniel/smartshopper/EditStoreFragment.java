@@ -9,6 +9,9 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -45,6 +48,7 @@ public class EditStoreFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
         UUID storeId = (UUID) getArguments().getSerializable(ARGS_STORE_ID);
 
@@ -107,6 +111,24 @@ public class EditStoreFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_edit_store, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.menu_delete_store:
+                InformationStorage.get(getActivity()).deleteStore(mStore);
+                getActivity().finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public void onPause(){
         super.onPause();
 
@@ -122,9 +144,6 @@ public class EditStoreFragment extends Fragment {
             mStore = temp;
         }
         String[] cat = mStore.getCategories();
-        /*for(String s : cat){
-            Log.d(TAG, s);
-        }*/
         updateUI();
     }
 

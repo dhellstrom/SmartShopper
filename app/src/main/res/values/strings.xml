@@ -19,4 +19,5 @@
     <string name="add_category_button">Add Categories</string>
     <string name="confirm_location_menu">Confirm Location</string>
     <string name="add_categories_menu_confirm">Confirm Selection</string>
+    <string name="delete_store_menu">Delete Store</string>
 </resources>
