@@ -1,6 +1,8 @@
 package com.summer.daniel.smartshopper;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,16 @@ public class StoreListFragment extends AbstractListFragment {
 
 
     private StoreAdapter mAdapter;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
+        View v = super.onCreateView(inflater, parent, savedInstanceState);
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.setTitle(R.string.store_list_title);
+
+        return v;
+    }
 
     protected void updateUI(RecyclerView recyclerView){
         InformationStorage storage = InformationStorage.get(getActivity());

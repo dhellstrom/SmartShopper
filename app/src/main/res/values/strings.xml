@@ -20,4 +20,6 @@
     <string name="confirm_location_menu">Confirm Location</string>
     <string name="add_categories_menu_confirm">Confirm Selection</string>
     <string name="delete_store_menu">Delete Store</string>
+    <string name="store_list_title">Stores</string>
+    <string name="edit_store_title">Edit Store</string>
 </resources>

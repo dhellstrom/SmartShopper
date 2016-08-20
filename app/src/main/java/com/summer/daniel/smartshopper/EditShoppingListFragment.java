@@ -30,6 +30,7 @@ import java.util.UUID;
 public class EditShoppingListFragment extends Fragment {
 
     private static final String ARGS_LIST_ID = "com.summer.daniel.smartshopper.editShoppingListFragment.list_id";
+    private static final String KEY_LIST_ID = "id";
     private static final String CONST_CREATE_ITEM = "Create new item";
 
     private EditText mListName;
@@ -56,10 +57,15 @@ public class EditShoppingListFragment extends Fragment {
 
         InformationStorage storage = InformationStorage.get(getActivity());
 
-        UUID listId = (UUID) getArguments().getSerializable(ARGS_LIST_ID);
+        UUID listId;
+        if(savedInstanceState != null){
+            listId = (UUID) savedInstanceState.getSerializable(KEY_LIST_ID);
+        }else {
+            listId = (UUID) getArguments().getSerializable(ARGS_LIST_ID);
+        }
         if(listId == null){
             mList = new ShoppingList();
-            storage.addShoppingList(mList); //adds list on creation. Maybe change to avoid too many lists
+            storage.addShoppingList(mList);
         }else{
             mList = storage.getShoppingList(listId);
         }
@@ -109,6 +115,7 @@ public class EditShoppingListFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                //update the adapter so suggestions are shown
                 updateSearchAdapter(newText);
                 return false;
             }
@@ -131,6 +138,8 @@ public class EditShoppingListFragment extends Fragment {
                     cursor.close();
                 }
                 if(itemName.equals(CONST_CREATE_ITEM)){
+                    //user clicked on "Create new item" so starts a new intent for creating a new item
+                    // with the text in the searchView as name
                     ShopItem newItem = new ShopItem(mSearchView.getQuery().toString(), ShopItem.NO_CATEGORY);
                     InformationStorage.get(getActivity()).addShopItem(newItem);
                     mList.addItem(newItem);
@@ -170,6 +179,13 @@ public class EditShoppingListFragment extends Fragment {
         updateUI();
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+
+        outState.putSerializable(KEY_LIST_ID, mList.getId());
+    }
+
     private void updateUI(){
         mListName.setText(mList.getName());
 
@@ -183,6 +199,11 @@ public class EditShoppingListFragment extends Fragment {
         }
     }
 
+    /**
+     * Updates the searchAdapter by adding all items starting with the text
+     * that has been typed into the searchView.
+     *
+     */
     private void updateSearchAdapter(String query){
         List<ShopItem> items = InformationStorage.get(getActivity()).getShopItems();
 
@@ -193,6 +214,8 @@ public class EditShoppingListFragment extends Fragment {
                 cursor.addRow(new Object[]{i, itemName});
             }
         }
+        //if there are no matching items saved, add "Create new item", making the user
+        //able to create the item and add it to the list of saved items
         if(cursor.getCount() == 0){
             cursor.addRow(new Object[]{0, CONST_CREATE_ITEM});
         }

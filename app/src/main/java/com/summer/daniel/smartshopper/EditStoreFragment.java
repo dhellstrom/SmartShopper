@@ -3,6 +3,7 @@ package com.summer.daniel.smartshopper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -29,6 +30,7 @@ public class EditStoreFragment extends Fragment {
     private static final String TAG = "EditStore";
 
     private static final String ARGS_STORE_ID = "com.summer.daniel.smartshopper.editStoreFragment.storeId";
+    private static final String KEY_STORE_ID = "id";
 
     private EditText mNameField;
     private Button mSetLocationButton, mAddCategoryButton;
@@ -50,9 +52,14 @@ public class EditStoreFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        UUID storeId = (UUID) getArguments().getSerializable(ARGS_STORE_ID);
-
         InformationStorage storage = InformationStorage.get(getActivity());
+
+        UUID storeId;
+        if(savedInstanceState != null){
+            storeId = (UUID) savedInstanceState.getSerializable(KEY_STORE_ID);
+        }else {
+          storeId =(UUID) getArguments().getSerializable(ARGS_STORE_ID);
+        }
         if(storeId == null){
             mStore = new Store("New Store", null);
             storage.addStore(mStore);
@@ -105,6 +112,9 @@ public class EditStoreFragment extends Fragment {
         mStoreCategoriesView = (RecyclerView) v.findViewById(R.id.edit_store_category_recycler_view);
         mStoreCategoriesView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.setTitle(R.string.edit_store_title);
+
         updateUI();
 
         return v;
@@ -145,6 +155,14 @@ public class EditStoreFragment extends Fragment {
         }
         String[] cat = mStore.getCategories();
         updateUI();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+
+        outState.putSerializable(KEY_STORE_ID, mStore.getId());
+
     }
 
     private void updateUI(){

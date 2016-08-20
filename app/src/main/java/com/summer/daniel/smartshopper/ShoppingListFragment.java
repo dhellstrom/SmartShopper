@@ -119,8 +119,6 @@ public class ShoppingListFragment extends Fragment {
     }
 
 
-
-    //troligtvis ta ut dessa till en egen klass
     private class ShopItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private TextView mNameTextView;

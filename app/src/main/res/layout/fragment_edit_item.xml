@@ -18,7 +18,8 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/edit_item_name_field" />
+        android:id="@+id/edit_item_name_field"
+        android:enabled="false" />
 
     <TextView
         android:layout_width="match_parent"
