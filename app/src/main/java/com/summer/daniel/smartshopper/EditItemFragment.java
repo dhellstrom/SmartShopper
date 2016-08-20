@@ -24,11 +24,11 @@ public class EditItemFragment extends Fragment {
 
     private ShopItem mItem;
 
-    public static Fragment newInstance(String itemName){
+    public static EditItemFragment newInstance(String itemName){
         Bundle args = new Bundle();
         args.putString(ARG_ITEM_NAME, itemName);
 
-        Fragment fragment = new EditItemFragment();
+        EditItemFragment fragment = new EditItemFragment();
         fragment.setArguments(args);
         return fragment;
     }

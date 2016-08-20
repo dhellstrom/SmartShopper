@@ -41,7 +41,7 @@ public class EditShoppingListFragment extends Fragment {
 
     private ShoppingList mList;
 
-    public static Fragment newInstance(UUID listId){
+    public static EditShoppingListFragment newInstance(UUID listId){
         Bundle args = new Bundle();
         args.putSerializable(ARGS_LIST_ID, listId);
 

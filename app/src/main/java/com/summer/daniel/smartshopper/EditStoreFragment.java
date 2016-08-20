@@ -32,7 +32,7 @@ public class EditStoreFragment extends Fragment {
     private Store mStore;
     private CategoryAdapter mAdapter;
 
-    public static Fragment newInstance(UUID storeId){
+    public static EditStoreFragment newInstance(UUID storeId){
         Bundle args = new Bundle();
         args.putSerializable(ARGS_STORE_ID, storeId);
         EditStoreFragment fragment = new EditStoreFragment();

@@ -183,8 +183,4 @@ public class SetLocationFragment extends SupportMapFragment {
             mMapMarker.setPosition(latLng);
         }
     }
-
-
-
-
 }

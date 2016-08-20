@@ -31,11 +31,11 @@ public class ShoppingListFragment extends Fragment {
 
     private ShoppingList mList;
 
-    public static Fragment newInstance(UUID listId){
+    public static ShoppingListFragment newInstance(UUID listId){
         Bundle args = new Bundle();
         args.putSerializable(ARGS_LIST_ID, listId);
 
-        Fragment fragment = new ShoppingListFragment();
+        ShoppingListFragment fragment = new ShoppingListFragment();
         fragment.setArguments(args);
         return fragment;
     }
