@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,7 +29,9 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.UUID;
 
 /**
@@ -208,6 +211,26 @@ public class ShoppingListFragment extends Fragment {
     private void sortListAfterLocation(LatLng location){
         Store closestStore = getClosestStore(location);
         if(closestStore != null){
+            String[] storeCategories = closestStore.getCategories();
+            List<ShopItem> originalList = mList.getItems();
+            List<ShopItem> sortedList = new ArrayList<>();
+            for(String category : storeCategories){
+                ListIterator<ShopItem> iterator = originalList.listIterator();
+                while(iterator.hasNext()) {
+                    ShopItem item = iterator.next();
+                    if (item.getCategory().equals(category)) {
+                        sortedList.add(item);
+                        iterator.remove();
+                    }
+                }
+            }
+            if(!originalList.isEmpty()){
+                for(ShopItem item : originalList){
+                    sortedList.add(item);
+                }
+            }
+            mList.updateListOrder(sortedList);
+            updateUI();
             Toast.makeText(getActivity(), "List sorted for: " + closestStore.getName(),
                     Toast.LENGTH_SHORT).show();
         }else{

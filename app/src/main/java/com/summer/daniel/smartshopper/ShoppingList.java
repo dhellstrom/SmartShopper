@@ -1,5 +1,7 @@
 package com.summer.daniel.smartshopper;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -105,8 +107,18 @@ public class ShoppingList {
         return result;
     }
 
+    public void updateListOrder(List<ShopItem> updatedItemOrder){
+        List<Boolean> updatedPurchasedOrder = new ArrayList<>();
+        for(ShopItem item : updatedItemOrder){
+            int oldIndex = mItems.indexOf(item);
+            updatedPurchasedOrder.add(mPurchased.get(oldIndex));
+        }
+        mItems = updatedItemOrder;
+        mPurchased = updatedPurchasedOrder;
+    }
+
     public List<ShopItem> getItems(){
-        return mItems;
+        return new ArrayList<>(mItems);
     }
 
     public List<Boolean> getPurchased(){
