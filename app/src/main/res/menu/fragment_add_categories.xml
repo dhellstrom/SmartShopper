@@ -7,4 +7,9 @@
         android:title="@string/add_categories_menu_confirm"
         app:showAsAction="ifRoom"/>
 
+    <item
+        android:id="@+id/menu_add_categories_new_category"
+        android:title="@string/add_categories_menu_new_category"
+        app:showAsAction="ifRoom"/>
+
 </menu>

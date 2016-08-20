@@ -1,7 +1,10 @@
 package com.summer.daniel.smartshopper;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -27,6 +30,9 @@ public class AddCategoriesFragment extends Fragment {
     private static final String TAG = "AddCategories";
 
     private static final String ARG_STORE_ID = "com.summer.daniel.smartshopper.addCategoriesFragment.storeId";
+    private static final String DIALOG_NEW_CATEGORY = "NewCategory";
+
+    private static final int REQUEST_CATEGORY = 0;
 
     private RecyclerView mCategoriesRecyclerView;
     private CategoryAdapter mAdapter;
@@ -73,6 +79,7 @@ public class AddCategoriesFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_add_categories, menu);
 
+        MenuItem newCategoryItem = menu.findItem(R.id.menu_add_categories_new_category);
         MenuItem confirmItem = menu.findItem(R.id.menu_add_categories_confirm);
         boolean visibleStatus = false;
         for(boolean b : mAddToStoreStatus){
@@ -80,6 +87,7 @@ public class AddCategoriesFragment extends Fragment {
                 visibleStatus = b;
             }
         }
+        newCategoryItem.setVisible(!visibleStatus);
         confirmItem.setVisible(visibleStatus);
     }
 
@@ -95,8 +103,25 @@ public class AddCategoriesFragment extends Fragment {
                 InformationStorage.get(getActivity()).updateStore(mStore);
                 getActivity().finish();
                 return true;
+            case R.id.menu_add_categories_new_category:
+                FragmentManager manager = getFragmentManager();
+                NewCategoryFragment dialog = new NewCategoryFragment();
+                dialog.setTargetFragment(AddCategoriesFragment.this, REQUEST_CATEGORY);
+                dialog.show(manager, DIALOG_NEW_CATEGORY);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(resultCode == Activity.RESULT_OK){
+            if(requestCode == REQUEST_CATEGORY){
+                String category = data.getStringExtra(NewCategoryFragment.EXTRA_CATEGORY_NAME);
+                InformationStorage.get(getActivity()).addCategory(category);
+                updateUI();
+            }
         }
     }
 
