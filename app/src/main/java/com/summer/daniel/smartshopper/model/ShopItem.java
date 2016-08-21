@@ -1,7 +1,8 @@
-package com.summer.daniel.smartshopper;
+package com.summer.daniel.smartshopper.model;
 
 /**
  * Created by Daniel on 2016-08-10.
+ * Model object for a shopItem. Contains a name and a category.
  */
 public class ShopItem {
 

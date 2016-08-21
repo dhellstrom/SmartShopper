@@ -11,6 +11,7 @@ import com.summer.daniel.smartshopper.database.DbSchema.StoreTable;
 
 /**
  * Created by Daniel on 2016-08-10.
+ * Helper for the database. Contains the SQL commands for creating the database.
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final int VERSION = 1;

@@ -13,6 +13,7 @@ import android.widget.EditText;
 
 /**
  * Created by Daniel on 2016-08-20.
+ * Dialog that the user inputs the name of the category that should be created.
  */
 public class NewCategoryFragment extends DialogFragment {
 

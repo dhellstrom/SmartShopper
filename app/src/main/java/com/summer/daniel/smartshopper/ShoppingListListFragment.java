@@ -11,10 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.summer.daniel.smartshopper.model.InformationStorage;
+import com.summer.daniel.smartshopper.model.ShoppingList;
+
 import java.util.List;
 
 /**
  * Created by Daniel on 2016-08-18.
+ * Launcher fragment. Displays a list of all saved shopping lists.
  */
 public class ShoppingListListFragment extends AbstractListFragment {
 
@@ -40,9 +44,6 @@ public class ShoppingListListFragment extends AbstractListFragment {
             case R.id.menu_edit_stores:
                 Intent intent = new Intent(getActivity(), StoreListActivity.class);
                 startActivity(intent);
-                return true;
-            case R.id.menu_edit_items:
-                //start ItemsList
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

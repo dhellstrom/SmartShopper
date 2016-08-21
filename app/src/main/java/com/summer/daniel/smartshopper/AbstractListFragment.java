@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 /**
  * Created by Daniel on 2016-08-10.
+ * Abstract fragment extended by fragments containing a list and a floating action button.
  */
 public abstract class AbstractListFragment extends Fragment{
 
@@ -49,6 +50,9 @@ public abstract class AbstractListFragment extends Fragment{
 
     protected abstract void updateUI(RecyclerView recyclerView);
 
+    /**
+     * Returns an intent used to start activity for creation of store/shoppingList
+     */
     protected abstract Intent newObjectIntent();
 
 }

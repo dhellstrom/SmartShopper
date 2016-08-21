@@ -2,10 +2,9 @@ package com.summer.daniel.smartshopper.database;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
-import android.util.Log;
 
-import com.summer.daniel.smartshopper.ShopItem;
-import com.summer.daniel.smartshopper.ShoppingList;
+import com.summer.daniel.smartshopper.model.ShopItem;
+import com.summer.daniel.smartshopper.model.ShoppingList;
 import com.summer.daniel.smartshopper.database.DbSchema.ListTable;
 
 import java.util.ArrayList;
@@ -14,6 +13,7 @@ import java.util.UUID;
 
 /**
  * Created by Daniel on 2016-08-11.
+ * CursorWrapper for easy extraction of shoppingLists.
  */
 public class ShoppingListCursorWrapper extends CursorWrapper {
     public ShoppingListCursorWrapper(Cursor cursor) {

@@ -10,16 +10,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.summer.daniel.smartshopper.model.InformationStorage;
+import com.summer.daniel.smartshopper.model.ShopItem;
+
 import java.util.List;
 
 /**
  * Created by Daniel on 2016-08-18.
+ * Fragment used to create a new item nad decide its category.
  */
 public class EditItemFragment extends Fragment {
 
     private static final String ARG_ITEM_NAME = "com.summer.daniel.smartshopper.editItemFragment.itemName";
 
-    private EditText mNameField;
+    private EditText mNameField; //disabled. Enable to support editing of items after they have been added.
     private EditText mCategoryField;
 
     private ShopItem mItem;
@@ -48,22 +52,6 @@ public class EditItemFragment extends Fragment {
 
         mNameField = (EditText) v.findViewById(R.id.edit_item_name_field);
         mNameField.setText(mItem.getName());
-        mNameField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                //do nothing
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                mItem.setName(charSequence.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                //do nothing
-            }
-        });
 
         mCategoryField = (EditText) v.findViewById(R.id.edit_item_category_field);
         mCategoryField.setText(mItem.getCategory());
@@ -97,8 +85,7 @@ public class EditItemFragment extends Fragment {
         InformationStorage storage = InformationStorage.get(getActivity());
         storage.updateShopItem(mItem);
 
-        //only add as new category if relevant
-        //maybe optimize by implementing method in storage
+        //only add as new category if not already in database
         List<String> categories = storage.getCategories();
         if(!categories.contains(mItem.getCategory()) && !mItem.getCategory().equals(ShopItem.NO_CATEGORY)){
             storage.addCategory(mItem.getCategory());

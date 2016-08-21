@@ -12,7 +12,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +27,10 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.summer.daniel.smartshopper.model.InformationStorage;
+import com.summer.daniel.smartshopper.model.ShopItem;
+import com.summer.daniel.smartshopper.model.ShoppingList;
+import com.summer.daniel.smartshopper.model.Store;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,11 +39,16 @@ import java.util.UUID;
 
 /**
  * Created by Daniel on 2016-08-16.
+ * Fragment for displaying a shopping list. Can update list order to correspond to the
+ * order of categories in the closest store.
  */
 public class ShoppingListFragment extends Fragment {
 
 
     private static final int REQUEST_LOCATION_PERMISSION = 0;
+
+    private static final float DISTANCE_THRESHOLD = 100;
+
     private static final String ARGS_LIST_ID = "com.summer.daniel.smartshopper.shoppingListFragment.list_id";
 
     private RecyclerView mListContents;
@@ -73,12 +81,13 @@ public class ShoppingListFragment extends Fragment {
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
+                        //enables the update list menuItem when client is connected
                         getActivity().invalidateOptionsMenu();
                     }
 
                     @Override
                     public void onConnectionSuspended(int i) {
-
+                        //do nothing
                     }
                 })
                 .build();
@@ -184,7 +193,7 @@ public class ShoppingListFragment extends Fragment {
 
     /**
      * Checks for permission to use location. Requests permission if it had not been granted earlier.
-     *
+     * If permission is granted retrieves location and updates the list order.
      */
     private void getLocationAndUpdateList() {
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
@@ -208,12 +217,17 @@ public class ShoppingListFragment extends Fragment {
         }
     }
 
+    /**
+     * Retrieves the store closest to the user (if any) and sorts the contents of the shopping list
+     * after the order their categories appear in the store.
+     */
     private void sortListAfterLocation(LatLng location){
         Store closestStore = getClosestStore(location);
         if(closestStore != null){
             String[] storeCategories = closestStore.getCategories();
             List<ShopItem> originalList = mList.getItems();
             List<ShopItem> sortedList = new ArrayList<>();
+            //loops through the store categories and moves items from originalList to sortedList.
             for(String category : storeCategories){
                 ListIterator<ShopItem> iterator = originalList.listIterator();
                 while(iterator.hasNext()) {
@@ -224,6 +238,7 @@ public class ShoppingListFragment extends Fragment {
                     }
                 }
             }
+            //if there are any items not corresponding to any categories, add them last.
             if(!originalList.isEmpty()){
                 for(ShopItem item : originalList){
                     sortedList.add(item);
@@ -234,28 +249,30 @@ public class ShoppingListFragment extends Fragment {
             Toast.makeText(getActivity(), "List sorted for: " + closestStore.getName(),
                     Toast.LENGTH_SHORT).show();
         }else{
-            Toast.makeText(getActivity(), R.string.no_nearby_store_toast, Toast.LENGTH_SHORT)
-                    .show();
+            String text = "No store within " + DISTANCE_THRESHOLD + " meters";
+            Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
         }
     }
 
     /**
      * Returns the store closest to the user's current position.
-     * Returns null if there is no store in a 100m radius.
+     * Returns null if there is no store within the radius of DISTANCE_THRESHOLD.
      */
     private Store getClosestStore(LatLng location){
         List<Store> stores = InformationStorage.get(getActivity()).getStores();
         Store closestStore = null;
-        float closestDistance = 100;
+        float closestDistance = DISTANCE_THRESHOLD;
         float[] distance;
         for(Store store : stores){
-            LatLng storeLocation = store.getLocation();
-            distance = new float[1];
-            Location.distanceBetween(location.latitude, location.longitude,
-                    storeLocation.latitude, storeLocation.longitude, distance);
-            if(distance[0] < closestDistance){
-                closestStore = store;
-                closestDistance = distance[0];
+            if(store.hasLocation()) {
+                LatLng storeLocation = store.getLocation();
+                distance = new float[1];
+                Location.distanceBetween(location.latitude, location.longitude,
+                        storeLocation.latitude, storeLocation.longitude, distance);
+                if (distance[0] < closestDistance) {
+                    closestStore = store;
+                    closestDistance = distance[0];
+                }
             }
         }
         return closestStore;

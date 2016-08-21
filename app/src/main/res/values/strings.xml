@@ -22,7 +22,6 @@
     <string name="delete_store_menu">Delete Store</string>
     <string name="store_list_title">Stores</string>
     <string name="edit_store_title">Edit Store</string>
-    <string name="no_nearby_store_toast">No store within 100 meters</string>
     <string name="update_list_menu">Update List</string>
     <string name="new_category_title">Name of category:</string>
     <string name="add_categories_menu_new_category">New Category</string>

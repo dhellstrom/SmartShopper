@@ -1,10 +1,9 @@
-package com.summer.daniel.smartshopper;
+package com.summer.daniel.smartshopper.model;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.summer.daniel.smartshopper.database.CategoryCursorWrapper;
@@ -23,10 +22,11 @@ import java.util.UUID;
 
 /**
  * Created by Daniel on 2016-08-10.
+ * Serves as interface between the fragments and the database.
+ * Updates the database and retrieves information from it.
+ * Singleton
  */
 public class InformationStorage {
-
-    private static String TAG = "InfoStorage";
 
     private static InformationStorage sInformationStorage;
     private Context mContext;
@@ -43,6 +43,11 @@ public class InformationStorage {
         mContext = context.getApplicationContext();
         mDatabase = new DatabaseHelper(mContext).getWritableDatabase();
     }
+
+    /* The following methods are the ones used by the fragments to add, retrieve, update and
+    delete model objects from the database. They use private help methods to create content
+    values for the objects inserted into the database, and custom CursorWrappers to extract
+    objects from the database.*/
 
     public void addStore(Store store){
         ContentValues values = getContentValues(store);
@@ -229,6 +234,11 @@ public class InformationStorage {
                 new String[]{idString});
     }
 
+    /*
+    The following methods are used to query the database for model objects. They return
+    CursorWrappers that are used to extract the objects
+     */
+
     private StoreCursorWrapper queryStores(String whereClause, String[] whereArgs){
         Cursor cursor = mDatabase.query(
                 StoreTable.NAME,
@@ -285,6 +295,10 @@ public class InformationStorage {
         return new ShoppingListCursorWrapper(cursor);
     }
 
+    /*
+    The following methods create content values for the model objects that can be inserted
+    into the database.
+     */
     private static ContentValues getContentValues(Store store){
         ContentValues values = new ContentValues();
         values.put(StoreTable.Cols.UUID, store.getId().toString());
@@ -328,6 +342,10 @@ public class InformationStorage {
         }
         return values;
     }
+
+    /*
+    Help methods to transform non string types into strings.
+     */
 
     private static String transformStringArrayToString(String[] array){
         StringBuilder builder = new StringBuilder();

@@ -6,7 +6,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,16 +22,18 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.summer.daniel.smartshopper.model.InformationStorage;
+import com.summer.daniel.smartshopper.model.Store;
 
 import java.util.UUID;
 
 
 /**
  * Created by Daniel on 2016-08-19.
+ * Fragment that user uses to select the location of the current store.
  */
 public class SetLocationFragment extends SupportMapFragment {
 
-    private static final String TAG = "SetLocation";
 
     private static final String ARG_STORE_ID = "com.summer.daniel.smartshopper.setLocationFragment.storeId";
     private static final int REQUEST_LOCATION_PERMISSION = 0;
@@ -60,27 +61,6 @@ public class SetLocationFragment extends SupportMapFragment {
         UUID storeId = (UUID) getArguments().getSerializable(ARG_STORE_ID);
         mStore = InformationStorage.get(getActivity()).getStore(storeId);
 
-        mClient = new GoogleApiClient.Builder(getActivity())
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-                    @Override
-                    public void onConnected(Bundle bundle) {
-                        if (mStore.hasLocation()) {
-                            //display store location if available
-                            mDisplayLocation = mStore.getLocation();
-                            moveToLocation(true);
-                        } else {
-                            //display user location otherwise
-                            getUserLocation();
-                        }
-                    }
-                    @Override
-                    public void onConnectionSuspended(int i) {
-                        //do nothing
-                    }
-                })
-                .build();
-
         getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
@@ -92,6 +72,29 @@ public class SetLocationFragment extends SupportMapFragment {
                         getActivity().invalidateOptionsMenu();
                     }
                 });
+
+                if(mStore.hasLocation()){
+                    //display store location if available
+                    mDisplayLocation = mStore.getLocation();
+                    moveToLocation(true);
+                }else{
+                    //otherwise construct a location client, retrieve the user location and
+                    //display it
+                    mClient = new GoogleApiClient.Builder(getActivity())
+                            .addApi(LocationServices.API)
+                            .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                                @Override
+                                public void onConnected(Bundle bundle) {
+                                    //display user location otherwise
+                                    getUserLocation();
+                                }
+                                @Override
+                                public void onConnectionSuspended(int i) {
+                                    //do nothing
+                                }
+                            })
+                            .build();
+                }
             }
         });
     }
@@ -100,14 +103,18 @@ public class SetLocationFragment extends SupportMapFragment {
     public void onStart() {
         super.onStart();
 
-        mClient.connect();
+        if(mClient != null) {
+            mClient.connect();
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        mClient.disconnect();
+        if(mClient != null) {
+            mClient.disconnect();
+        }
     }
 
     @Override
@@ -116,6 +123,7 @@ public class SetLocationFragment extends SupportMapFragment {
         inflater.inflate(R.menu.fragment_set_location, menu);
 
         MenuItem confirmItem = menu.findItem(R.id.menu_confirm_location);
+        //confirmItem is only visible when user has placed a marker
         confirmItem.setVisible(mMapMarker != null);
     }
 
@@ -153,7 +161,7 @@ public class SetLocationFragment extends SupportMapFragment {
                 Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             LocationRequest request = LocationRequest.create();
             request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            request.setNumUpdates(1);
+            request.setNumUpdates(1); //only get one location update and then stop
             request.setInterval(0);
             LocationServices.FusedLocationApi
                     .requestLocationUpdates(mClient, request, new LocationListener() {
@@ -170,6 +178,11 @@ public class SetLocationFragment extends SupportMapFragment {
         }
     }
 
+    /**
+     * Moves the camera to the current displayLocation (mDisplayLocation) and places a marker
+     * if placeMarker is true.
+     * @param placeMarker whether marker should be placed or not
+     */
     private void moveToLocation(boolean placeMarker){
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mDisplayLocation, 15);
         mMap.animateCamera(cameraUpdate);
@@ -178,6 +191,9 @@ public class SetLocationFragment extends SupportMapFragment {
         }
     }
 
+    /**
+     * Places a marker at the provided location.
+     */
     private void placeMarker(LatLng latLng){
         if(mMapMarker == null){
             mMapMarker = mMap.addMarker(new MarkerOptions().position(latLng));

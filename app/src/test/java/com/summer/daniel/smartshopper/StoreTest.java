@@ -5,6 +5,7 @@ package com.summer.daniel.smartshopper;
  */
 
 import com.google.android.gms.maps.model.LatLng;
+import com.summer.daniel.smartshopper.model.Store;
 
 import org.junit.Before;
 import org.junit.Test;

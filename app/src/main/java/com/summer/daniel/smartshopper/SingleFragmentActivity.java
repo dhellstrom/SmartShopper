@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 /**
- * Created by Daniel on 2016-06-19.
+ * Abstract class for activities containing a single fragment. Copied from the course book.
  */
 public abstract class SingleFragmentActivity extends AppCompatActivity {
 

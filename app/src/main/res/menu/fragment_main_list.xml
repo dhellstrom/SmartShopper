@@ -8,8 +8,4 @@
         android:title="@string/edit_stores_menu"
         app:showAsAction="ifRoom"/>
 
-    <item
-        android:id="@+id/menu_edit_items"
-        android:title="@string/edit_items_menu"
-        app:showAsAction="ifRoom"/>
 </menu>

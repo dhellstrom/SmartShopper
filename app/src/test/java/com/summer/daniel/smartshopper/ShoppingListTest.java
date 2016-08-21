@@ -4,6 +4,9 @@ package com.summer.daniel.smartshopper;
  * Created by Daniel on 2016-08-12.
  */
 
+import com.summer.daniel.smartshopper.model.ShopItem;
+import com.summer.daniel.smartshopper.model.ShoppingList;
+
 import org.junit.Test;
 import org.junit.Before;
 

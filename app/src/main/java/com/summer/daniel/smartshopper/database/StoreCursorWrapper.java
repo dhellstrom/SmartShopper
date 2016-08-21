@@ -2,16 +2,16 @@ package com.summer.daniel.smartshopper.database;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.summer.daniel.smartshopper.Store;
+import com.summer.daniel.smartshopper.model.Store;
 import com.summer.daniel.smartshopper.database.DbSchema.StoreTable;
 
 import java.util.UUID;
 
 /**
  * Created by Daniel on 2016-08-11.
+ * CursorWrapper for easy extraction of stores.
  */
 public class StoreCursorWrapper extends CursorWrapper {
     public StoreCursorWrapper(Cursor cursor) {

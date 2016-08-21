@@ -1,4 +1,4 @@
-package com.summer.daniel.smartshopper;
+package com.summer.daniel.smartshopper.model;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -14,9 +14,12 @@ public class Store {
     private UUID mId;
     private String mName;
     private LatLng mLocation;
-    private String[] mCategories;
+    private String[] mCategories; //contains the categories in the store in order
     private int mNumberOfCategories;
 
+    /**
+     * Creates a new store with set parameters. Used when loading from database.
+     */
     public Store(UUID id, String name, LatLng location, String[] categories){
         mId = id;
         mName = name;
@@ -26,9 +29,12 @@ public class Store {
         while(i < mCategories.length && mCategories[i] != null){
             i++;
         }
-        mNumberOfCategories = i;
+        mNumberOfCategories = i; //sets number of categories to the number of non null items in mCategories.
     }
 
+    /**
+     * Creates a new store with random id and empty categories array. Used when creating a new store.
+     */
     public Store(String name, LatLng location){
         this(UUID.randomUUID(), name, location, new String[11]);
     }
@@ -36,6 +42,7 @@ public class Store {
     public UUID getId(){
         return mId;
     }
+
     public void setName(String name){
         mName = name;
     }
@@ -73,6 +80,7 @@ public class Store {
             }
             i++;
         }
+        //increases the length of the array if it is full.
         if(i == mCategories.length){
             String[] temp = mCategories;
             mCategories = new String[mCategories.length*2];
@@ -88,6 +96,10 @@ public class Store {
         return mNumberOfCategories;
     }
 
+    /**
+     * Increases the priority of the selected item, i.e moves it one step forward in
+     * the categories array
+     */
     public void increasePriority(String category){
         int pos = -1;
         for(int i = 0; i < mNumberOfCategories; i++){
@@ -103,6 +115,10 @@ public class Store {
         }
     }
 
+    /**
+     * Decreases the priority of the selected item, i.e moves it one step backward in
+     * the categories array
+     */
     public void decreasePriority(String category){
         int pos = -1;
         for(int i = 0; i < mNumberOfCategories; i++){

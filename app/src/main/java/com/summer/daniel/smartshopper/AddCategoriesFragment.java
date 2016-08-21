@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,16 +17,19 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.summer.daniel.smartshopper.model.InformationStorage;
+import com.summer.daniel.smartshopper.model.Store;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by Daniel on 2016-08-20.
+ * Fragment used to add categories to a store. Displays a list with categories
+ * that the user can add to the current store.
  */
 public class AddCategoriesFragment extends Fragment {
-
-    private static final String TAG = "AddCategories";
 
     private static final String ARG_STORE_ID = "com.summer.daniel.smartshopper.addCategoriesFragment.storeId";
     private static final String DIALOG_NEW_CATEGORY = "NewCategory";
@@ -39,8 +41,8 @@ public class AddCategoriesFragment extends Fragment {
     private CategoryAdapter mAdapter;
 
     private Store mStore;
-    private List<String> mAvailableCategories;
-    private boolean[] mAddToStoreStatus;
+    private List<String> mAvailableCategories; //the categories to be listed
+    private boolean[] mAddToStoreStatus; //decides if category at position i should be added
 
     public static AddCategoriesFragment newInstance(UUID storeId){
         Bundle args = new Bundle();
@@ -87,6 +89,8 @@ public class AddCategoriesFragment extends Fragment {
         MenuItem newCategoryItem = menu.findItem(R.id.menu_add_categories_new_category);
         MenuItem confirmItem = menu.findItem(R.id.menu_add_categories_confirm);
         boolean visibleStatus = false;
+
+        //display the confirm button and hid the new category button of a checkbox i checked
         for(boolean b : mAddToStoreStatus){
             if(b == true){
                 visibleStatus = b;
@@ -163,6 +167,9 @@ public class AddCategoriesFragment extends Fragment {
         }
     }
 
+    /**
+     * Checks if the array contains a specific string.
+     */
     private boolean arrayContains(String[] array, String category){
         for(String s : array){
             if(s.equals(category)){
@@ -186,7 +193,7 @@ public class AddCategoriesFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     mAddToStoreStatus[getAdapterPosition()] = b;
-                    getActivity().invalidateOptionsMenu();
+                    getActivity().invalidateOptionsMenu(); //see if visible status of menuItems should be changed
                 }
             });
         }

@@ -21,17 +21,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.summer.daniel.smartshopper.model.InformationStorage;
+import com.summer.daniel.smartshopper.model.ShopItem;
+import com.summer.daniel.smartshopper.model.ShoppingList;
+
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by Daniel on 2016-08-16.
+ * Fragment for editing a shoppingList. User can change name nad add/delete items.
  */
 public class EditShoppingListFragment extends Fragment {
 
     private static final String ARGS_LIST_ID = "com.summer.daniel.smartshopper.editShoppingListFragment.list_id";
     private static final String KEY_LIST_ID = "id";
     private static final String CONST_CREATE_ITEM = "Create new item";
+    private static final String CURSOR_COL_ITEM_NAME = "itemName";
 
     private EditText mListName;
     private RecyclerView mListContents;
@@ -70,8 +76,9 @@ public class EditShoppingListFragment extends Fragment {
             mList = storage.getShoppingList(listId);
         }
 
+        //adapter for searchView suggestions
         mSearchAdapter = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_list_item_1,
-                null, new String[]{"itemName"}, new int[]{android.R.id.text1},
+                null, new String[]{CURSOR_COL_ITEM_NAME}, new int[]{android.R.id.text1},
                 CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
     }
 
@@ -124,6 +131,7 @@ public class EditShoppingListFragment extends Fragment {
 
             @Override
             public boolean onSuggestionSelect(int position) {
+                //do nothing
                 return false;
             }
 
@@ -133,7 +141,7 @@ public class EditShoppingListFragment extends Fragment {
                 String itemName;
                 try{
                     cursor.moveToPosition(position);
-                    itemName = cursor.getString(cursor.getColumnIndex("itemName"));
+                    itemName = cursor.getString(cursor.getColumnIndex(CURSOR_COL_ITEM_NAME));
                 }finally {
                     cursor.close();
                 }
@@ -146,11 +154,12 @@ public class EditShoppingListFragment extends Fragment {
                     Intent intent = EditItemActivity.newIntent(getActivity(), newItem.getName());
                     startActivity(intent);
                 }else{
+                    // user clicked on an existing item so it is added to the list
                     mList.addItem(InformationStorage.get(getActivity()).getShopItem(itemName));
                     updateUI();
                 }
 
-                mSearchView.setQuery("", false);
+                mSearchView.setQuery("", false); //empties the searchView
                 return true;
             }
         });
@@ -202,12 +211,11 @@ public class EditShoppingListFragment extends Fragment {
     /**
      * Updates the searchAdapter by adding all items starting with the text
      * that has been typed into the searchView.
-     *
      */
     private void updateSearchAdapter(String query){
         List<ShopItem> items = InformationStorage.get(getActivity()).getShopItems();
 
-        MatrixCursor cursor = new MatrixCursor(new String[]{BaseColumns._ID, "itemName"});
+        MatrixCursor cursor = new MatrixCursor(new String[]{BaseColumns._ID, CURSOR_COL_ITEM_NAME});
         for(int i = 0; i < items.size(); i++){
             String itemName = items.get(i).getName();
             if(itemName.toLowerCase().startsWith(query.toLowerCase())){

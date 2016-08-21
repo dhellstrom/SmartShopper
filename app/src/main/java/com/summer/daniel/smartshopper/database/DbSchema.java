@@ -2,6 +2,7 @@ package com.summer.daniel.smartshopper.database;
 
 /**
  * Created by Daniel on 2016-08-10.
+ * Contains table and column names.
  */
 public class DbSchema {
 

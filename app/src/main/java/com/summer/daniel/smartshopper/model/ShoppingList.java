@@ -1,6 +1,4 @@
-package com.summer.daniel.smartshopper;
-
-import android.util.Log;
+package com.summer.daniel.smartshopper.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,13 +7,15 @@ import java.util.UUID;
 
 /**
  * Created by Daniel on 2016-08-11.
+ *
+ * Model object for a shopping list.
  */
 public class ShoppingList {
 
     private UUID mId;
     private String mName;
     private List<ShopItem> mItems;
-    private List<Boolean> mPurchased;
+    private List<Boolean> mPurchased; //contains the purchased status of items
 
     /**
      * Creates a shopping list with a chosen id and name. Used when loading from database.
@@ -46,6 +46,9 @@ public class ShoppingList {
         this(UUID.randomUUID(), "Shopping List", new ArrayList<ShopItem>(), new ArrayList<Boolean>());
     }
 
+    /**
+     * Adds an item to the list if it is not already added.
+     */
     public boolean addItem(ShopItem item){
         if(!mItems.contains(item)) {
             mItems.add(item);
@@ -55,6 +58,9 @@ public class ShoppingList {
         return false;
     }
 
+    /**
+     * Removes an item from the list if it is present.
+     */
     public boolean removeItem(String itemName){
         ShopItem item = new ShopItem(itemName, "");
         int index = mItems.indexOf(item);
@@ -66,6 +72,9 @@ public class ShoppingList {
         return false;
     }
 
+    /**
+     * Toggles the purchased status of an item.
+     */
     public void toggleItemPurchased(String itemName){
         ShopItem item = new ShopItem(itemName, "");
         int index = mItems.indexOf(item);
@@ -107,6 +116,10 @@ public class ShoppingList {
         return result;
     }
 
+    /**
+     * Updates the order of the purchasedStatus list to match the order of the new list
+     * and updates the itemList.
+     */
     public void updateListOrder(List<ShopItem> updatedItemOrder){
         List<Boolean> updatedPurchasedOrder = new ArrayList<>();
         for(ShopItem item : updatedItemOrder){

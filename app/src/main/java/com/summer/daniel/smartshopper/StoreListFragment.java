@@ -9,10 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.summer.daniel.smartshopper.model.InformationStorage;
+import com.summer.daniel.smartshopper.model.Store;
+
 import java.util.List;
 
 /**
  * Created by Daniel on 2016-08-18.
+ * Fragment used to display all saved stores.
  */
 public class StoreListFragment extends AbstractListFragment {
 
