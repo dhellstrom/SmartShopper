@@ -6,6 +6,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -72,31 +73,29 @@ public class SetLocationFragment extends SupportMapFragment {
                         getActivity().invalidateOptionsMenu();
                     }
                 });
-
-                if(mStore.hasLocation()){
-                    //display store location if available
-                    mDisplayLocation = mStore.getLocation();
-                    moveToLocation(true);
-                }else{
-                    //otherwise construct a location client, retrieve the user location and
-                    //display it
-                    mClient = new GoogleApiClient.Builder(getActivity())
-                            .addApi(LocationServices.API)
-                            .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-                                @Override
-                                public void onConnected(Bundle bundle) {
-                                    //display user location otherwise
-                                    getUserLocation();
-                                }
-                                @Override
-                                public void onConnectionSuspended(int i) {
-                                    //do nothing
-                                }
-                            })
-                            .build();
-                }
             }
         });
+
+        mClient = new GoogleApiClient.Builder(getActivity())
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                    @Override
+                    public void onConnected(Bundle bundle) {
+                        if(mStore.hasLocation()){
+                            //display store location if available
+                            mDisplayLocation = mStore.getLocation();
+                            moveToLocation(true);
+                        }else {
+                            //display user location otherwise
+                            getUserLocation();
+                        }
+                    }
+                    @Override
+                    public void onConnectionSuspended(int i) {
+                        //do nothing
+                    }
+                })
+                .build();
     }
 
     @Override
@@ -185,7 +184,7 @@ public class SetLocationFragment extends SupportMapFragment {
      */
     private void moveToLocation(boolean placeMarker){
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mDisplayLocation, 15);
-        mMap.animateCamera(cameraUpdate);
+        mMap.moveCamera(cameraUpdate);
         if(placeMarker){
             placeMarker(mDisplayLocation);
         }
