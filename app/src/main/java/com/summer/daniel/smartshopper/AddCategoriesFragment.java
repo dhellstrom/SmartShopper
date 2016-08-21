@@ -31,6 +31,7 @@ public class AddCategoriesFragment extends Fragment {
 
     private static final String ARG_STORE_ID = "com.summer.daniel.smartshopper.addCategoriesFragment.storeId";
     private static final String DIALOG_NEW_CATEGORY = "NewCategory";
+    private static final String KEY_ADD_TO_STORE_STATUS = "addToStoreStatus";
 
     private static final int REQUEST_CATEGORY = 0;
 
@@ -58,6 +59,10 @@ public class AddCategoriesFragment extends Fragment {
 
         UUID storeId = (UUID) getArguments().getSerializable(ARG_STORE_ID);
         mStore = InformationStorage.get(getActivity()).getStore(storeId);
+
+        if(savedInstanceState != null){
+            mAddToStoreStatus = savedInstanceState.getBooleanArray(KEY_ADD_TO_STORE_STATUS);
+        }
     }
 
     @Override
@@ -125,6 +130,13 @@ public class AddCategoriesFragment extends Fragment {
         }
     }
 
+     @Override
+     public void onSaveInstanceState(Bundle outState){
+         super.onSaveInstanceState(outState);
+
+         outState.putBooleanArray(KEY_ADD_TO_STORE_STATUS, mAddToStoreStatus);
+     }
+
     private void updateUI(){
         InformationStorage storage = InformationStorage.get(getActivity());
         List<String> savedCategories = storage.getCategories();
@@ -138,7 +150,9 @@ public class AddCategoriesFragment extends Fragment {
             }
         }
 
-        mAddToStoreStatus = new boolean[mAvailableCategories.size()];
+        if(mAddToStoreStatus == null) {
+            mAddToStoreStatus = new boolean[mAvailableCategories.size()];
+        }
 
         if(mAdapter == null){
             mAdapter = new CategoryAdapter(mAvailableCategories);
@@ -179,6 +193,7 @@ public class AddCategoriesFragment extends Fragment {
 
         public void bindCategory(String category){
             mCategoryName.setText(category);
+            mAddCheckbox.setChecked(mAddToStoreStatus[getAdapterPosition()]);
         }
 
     }

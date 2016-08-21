@@ -5,6 +5,6 @@
     <item
         android:id="@+id/menu_delete_store"
         android:title="@string/delete_store_menu"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
 
 </menu>
