@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -129,6 +130,7 @@ public class AddCategoriesFragment extends Fragment {
             if(requestCode == REQUEST_CATEGORY){
                 String category = data.getStringExtra(NewCategoryFragment.EXTRA_CATEGORY_NAME);
                 InformationStorage.get(getActivity()).addCategory(category);
+                mAddToStoreStatus = null; //invalidate the old list
                 updateUI();
             }
         }
